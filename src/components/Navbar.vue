@@ -8,16 +8,16 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="#">Sklep</a>
+          <router-link class="nav-link" active-class="nav-link-active" :to="'/obrazy'">Sklep</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">O nas</a>
+          <router-link class="nav-link" active-class="nav-link-active" :to="'/uzytkownik'">Uzytkownik</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Kontakt</a>
+          <router-link class="nav-link" active-class="nav-link-active" :to="'/o nas'">O nas</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Kontakt</a>
+          <router-link class="nav-link" active-class="nav-link-active" :to="'/kontakt'">Kontakt</router-link>
         </li>
       </ul>
     </div>
@@ -26,4 +26,6 @@
 </template>
 
 <script setup>
+
+
 </script>
