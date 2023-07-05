@@ -44,9 +44,10 @@ function onButtonClicked() {
 
 async function logIn() {
     const loggedIn = await userDataStorage.logIn(data.email, data.password);
-    
+
     if (loggedIn) {
         eventBus.$emit('userLoggedIn');
+        router.push('/');
     }
 }
 

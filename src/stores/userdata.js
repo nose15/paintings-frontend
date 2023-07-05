@@ -9,7 +9,7 @@ function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
     if (!tokenLoggedIn(currentToken)) {
         // clear local user data
-        return null;
+        return "null";
     }
     return currentToken;
 }
@@ -33,6 +33,15 @@ async function logInRequest(email, password) {
 
 }
 
+async function logOutRequest() {
+    const token = bearerToken;
+    const response = await apiWrapper.postData("logout", {}, {"Authorization" : `Bearer ${token}`, "Accept":"application/json" });
+
+    if (!response.ok) {
+        throw new Error("Something went wrong");
+    }
+}
+
 let bearerToken = checkBearerToken();
 
 export const useUserDataStore = defineStore('user-data', () => {
@@ -50,6 +59,17 @@ export const useUserDataStore = defineStore('user-data', () => {
         // TODO: Better error handling, once its settled in the backend
     }
     
+    async function logOut() {
+        try {
+            await logOutRequest();
+            deleteToken();
+            return true;
+        }
+        catch (error) {
+            return false;
+        }
+    }
+
 
     function setToken(token) {
         bearerToken = token;
@@ -61,13 +81,13 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
 
     function deleteToken() {
-        bearerToken = null;
-        localStorage.setItem(bearerTokenKey, null);
+        bearerToken = "null";
+        localStorage.setItem(bearerTokenKey, bearerToken);
     }
 
     function isLoggedIn() {
-        return bearerToken == null ? false : true
+        return bearerToken == "null" ? false : true
     }
 
-    return { setToken, getToken, deleteToken, isLoggedIn, logIn };
+    return { setToken, getToken, deleteToken, isLoggedIn, logIn, logOut };
 });

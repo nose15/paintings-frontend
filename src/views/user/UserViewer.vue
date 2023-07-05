@@ -17,30 +17,12 @@ const router = useRouter();
 const route = useRoute();
 const data = /* here will be the logic for retrieving user data from storage, right now there's no endpoint */ reactive({ userId: route.params.userId });
 
-function logOut() {
-  postData("http://localhost:8000/api/logout");
-  userData.deleteToken();
-  eventBus.$emit('userLoggedOut');
-  router.push('/')
+async function logOut() {
+    const loggedOut = await userData.logOut();
+    
+    if (loggedOut) {
+        eventBus.$emit('userLoggedOut');
+        router.push('/');
+    }
 }
-
-async function postData(url = "", data = {}) {
-  const response = await fetch(url, {
-      method: "POST",
-      mode: "cors", 
-      cache: "no-cache", 
-      credentials: "omit",
-      headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8000/",
-          "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer", 
-      body: JSON.stringify(data)
-  });
-
-  console.log(response);
-}
-
-
 </script>
