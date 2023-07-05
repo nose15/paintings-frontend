@@ -43,38 +43,10 @@ function onButtonClicked() {
 }
 
 async function logIn() {
-    try {
-        const token = await postData("http://localhost:8000/api/login", {'email': data.email, 'password': data.password});
-        userDataStorage.setToken(token);
+    const loggedIn = await userDataStorage.logIn(data.email, data.password);
+    
+    if (loggedIn) {
         eventBus.$emit('userLoggedIn');
-    } catch (error) {
-        userDataStorage.setToken(null);
-        alert(error);
-    }
-}
-
-async function postData(url = "", data = {}) {
-    const response = await fetch(url, {
-        method: "POST",
-        mode: "cors", 
-        cache: "no-cache", 
-        credentials: "omit",
-        headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8000/",
-            "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer", 
-        body: JSON.stringify(data)
-    });
-
-    if (response.ok) {
-        const token = await response.json();
-        return token.token;
-    }
-    else {
-        // once the errors are consistent, error handling will be added
-        throw new Error("Something went wrong");
     }
 }
 

@@ -1,15 +1,46 @@
 <template>
     <h1>UserViewer</h1>
     <p>{{ data.userId }}</p>
+    <button type="button" class="btn btn-danger" @click.prevent="logOut">Wyloguj się</button>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import { useUserDataStore } from '../../stores/userdata';
+import { useRouter } from 'vue-router';
+
+const eventBus = inject('$eventBus');
+const userData = useUserDataStore();
+const router = useRouter();
 
 const route = useRoute();
 const data = /* here will be the logic for retrieving user data from storage, right now there's no endpoint */ reactive({ userId: route.params.userId });
 
+function logOut() {
+  postData("http://localhost:8000/api/logout");
+  userData.deleteToken();
+  eventBus.$emit('userLoggedOut');
+  router.push('/')
+}
+
+async function postData(url = "", data = {}) {
+  const response = await fetch(url, {
+      method: "POST",
+      mode: "cors", 
+      cache: "no-cache", 
+      credentials: "omit",
+      headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8000/",
+          "Content-Type": "application/json",
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer", 
+      body: JSON.stringify(data)
+  });
+
+  console.log(response);
+}
 
 
 </script>

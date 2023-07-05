@@ -10,14 +10,8 @@
         <li class="nav-item">
           <router-link class="nav-link" active-class="nav-link-active" :to="'/obrazy'">Sklep</router-link>
         </li>
-        <li class="nav-item">
-          <router-link class="nav-link" active-class="nav-link-active" :to="userLink" @click.prevent="onButtonClicked">{{ userLinkText }}</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" active-class="nav-link-active" :to="'/o nas'">O nas</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" active-class="nav-link-active" :to="'/kontakt'">Kontakt</router-link>
+        <li>
+          <router-link class="nav-link" active-class="nav-link-active" :to="userLink">{{ userLinkText }}</router-link>
         </li>
       </ul>
     </div>
@@ -35,67 +29,28 @@ const router = useRouter();
 const userData = useUserDataStore();
 
 const data = reactive({
-  userToken: userData.getToken(),
+  isLoggedIn: userData.isLoggedIn(),
 })
 
-console.log(data.userToken);
-
-const userId = computed(() => {
-  return 1;
+eventBus.$on('userLoggedIn', () => {
+  update();
 });
+
+eventBus.$on('userLoggedOut', () => {
+  update();
+});
+
 const userLink = computed(() => {
-  if (data.userToken == null) {
-    return "/logowanie"
-  }
-  else {
-    return "/";
-  }
+  return !(data.isLoggedIn) ? '/logowanie' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
 });
+
 const userLinkText = computed(() => {
-  if (data.userToken == null) {
-    return "Zaloguj"
-  }
-  else {
-    return "Wyloguj";
-  }
-});
-const onButtonClicked = computed(() => {
-  if (data.userToken == null) {
-    return logIn;
-  }
-  else {
-    return logOut;
-  }
+  return !(data.isLoggedIn) ? 'Zaloguj' : `Uzytkownik` 
 });
 
-function logIn() {
-  return;
+function update()
+{
+  data.isLoggedIn = userData.isLoggedIn();
 }
-
-function logOut() {
-  postData("http://localhost:8000/api/logout");
-  userData.deleteToken();
-}
-
-async function postData(url = "", data = {}) {
-  const response = await fetch(url, {
-      method: "POST",
-      mode: "cors", 
-      cache: "no-cache", 
-      credentials: "omit",
-      headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8000/",
-          "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer", 
-      body: JSON.stringify(data)
-  });
-
-  console.log(response);
-}
-
-
-
 
 </script>
