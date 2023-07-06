@@ -37,7 +37,9 @@
 
 <script setup>
 import { reactive } from 'vue';
+import { useUserDataStore } from '../../stores/userdata';
 
+const userDataStore = useUserDataStore();
 const data = reactive({
     name: "",
     surname: "",
@@ -51,29 +53,13 @@ function onButtonClicked() {
 }
 
 function register() {
-    postData("http://localhost:8000/api/register", {name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
+  const requestData = {
+    name: `${data.name} ${data.surname}`, 
+    email:data.email, 
+    password: data.password, 
+    password_confirmation: data.password_confirmation
+  };
+  userDataStore.register(requestData);
 }
-
-async function postData(url = "", data = {}) {
-    const response = await fetch(url, {
-        method: "POST",
-        mode: "cors", 
-        cache: "no-cache", 
-        credentials: "omit",
-        headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8000/",
-            "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer", 
-        body: JSON.stringify(data)
-    });
-
-    console.log(response);
-}
-
-
-
-
 
 </script>

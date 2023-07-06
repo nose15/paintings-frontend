@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import apiWrapper from "../api_wrappers/apiPictureShopWrapper";
 import { inject } from "vue";
+import { LoginRequest } from '../services/requests/LoginRequest.js';
+import { LogoutRequest } from "../services/requests/LogoutRequest.js";
+import { RegisterRequest } from "../services/requests/RegisterRequest";
 
 // more functionality will come once there's an endpoint for retrieving user data
 const bearerTokenKey = "token"
@@ -19,40 +22,20 @@ function tokenLoggedIn(token) {
     return true;
 }
 
-async function logInRequest(email, password) {
-    const response = await apiWrapper.postData("login", {email: email, password: password});
-
-    if (response.ok) {
-        const token = await response.json();
-        return token.token;
-    }
-    else {
-        // once the errors are consistent, error handling will be added
-        throw new Error("Something went wrong");
-    }
-
-}
-
-async function logOutRequest() {
-    const token = bearerToken;
-    const response = await apiWrapper.postData("logout", {}, {"Authorization" : `Bearer ${token}`, "Accept":"application/json" });
-
-    if (!response.ok) {
-        throw new Error("Something went wrong");
-    }
-}
-
 let bearerToken = checkBearerToken();
 
 export const useUserDataStore = defineStore('user-data', () => {
 
     async function logIn(email, password) {
+        const loginRequest = new LoginRequest({email: email, password: password});
+
         try {
-            const token = await logInRequest(email, password);
+            const token = await loginRequest.send();
             setToken(token);
             return true;
         }
         catch (error) {
+            console.error(error);
             return false;
         }
 
@@ -60,16 +43,33 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
     
     async function logOut() {
+        const logoutRequest = new LogoutRequest(bearerToken);
+
         try {
-            await logOutRequest();
+            const response = await logoutRequest.send();
             deleteToken();
-            return true;
+            if (response.ok) {
+                return true;
+            }
+            return false;
         }
         catch (error) {
+            console.error(error);
             return false;
         }
     }
 
+    async function register(data) {
+        const registerRequest = new RegisterRequest(data);
+
+        try {
+            const response = await registerRequest.send();
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
 
     function setToken(token) {
         bearerToken = token;
@@ -89,5 +89,5 @@ export const useUserDataStore = defineStore('user-data', () => {
         return bearerToken == "null" ? false : true
     }
 
-    return { setToken, getToken, deleteToken, isLoggedIn, logIn, logOut };
+    return { setToken, getToken, deleteToken, isLoggedIn, logIn, logOut, register };
 });

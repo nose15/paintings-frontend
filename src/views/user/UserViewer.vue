@@ -19,10 +19,10 @@ const data = /* here will be the logic for retrieving user data from storage, ri
 
 async function logOut() {
     const loggedOut = await userData.logOut();
-    
     if (loggedOut) {
         eventBus.$emit('userLoggedOut');
         router.push('/');
     }
+
 }
 </script>
