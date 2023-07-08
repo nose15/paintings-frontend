@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { usePaintingsStore } from '../../stores/paintings';
+import { usePaintingsStore } from '../../services/stores/paintings.js';
 import PaintingListItem from '../../components/painting/PaintingListItem.vue';
 const paintingsStore = usePaintingsStore();
-</script>
+</script>../../services/stores/paintings

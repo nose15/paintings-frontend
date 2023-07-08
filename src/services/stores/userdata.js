@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import apiWrapper from "../api_wrappers/apiPictureShopWrapper";
+import apiWrapper from "../../api_wrappers/apiPictureShopWrapper";
 import { inject } from "vue";
-import { LoginRequest } from '../services/requests/LoginRequest.js';
-import { LogoutRequest } from "../services/requests/LogoutRequest.js";
-import { RegisterRequest } from "../services/requests/RegisterRequest";
+import { LoginRequest } from '../requests/LoginRequest.js';
+import { LogoutRequest } from "../requests/LogoutRequest.js";
+import { RegisterRequest } from "../requests/RegisterRequest";
 
 // more functionality will come once there's an endpoint for retrieving user data
 const bearerTokenKey = "token"

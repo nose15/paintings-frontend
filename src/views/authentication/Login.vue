@@ -17,7 +17,7 @@
           </div>
         <div class="row d-flex align-items-center mx-auto">
             <button @click.prevent="onButtonClicked" type="submit" class="btn btn-primary col-lg-4">Zaloguj</button>
-            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/rejestracja`">Nie masz konta?</router-link>
+            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/zarejestruj`">Nie masz konta?</router-link>
         </div>
         </form>
     </div>
@@ -26,7 +26,7 @@
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserDataStore } from '../../stores/userdata'
+import { useUserDataStore } from '../../services/stores/userdata.js';
 
 const eventBus = inject("$eventBus");
 const router = useRouter();
@@ -51,4 +51,4 @@ async function logIn() {
     }
 }
 
-</script>
+</script>../../services/stores/userdata

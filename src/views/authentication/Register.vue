@@ -29,7 +29,7 @@
           </div>
         <div class="row d-flex align-items-center mx-auto">
             <button @click.prevent="onButtonClicked" type="submit" class="btn btn-primary col-lg-4">Zarejestruj się</button>
-            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/logowanie`">Masz już konto?</router-link>
+            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/zaloguj`">Masz już konto?</router-link>
         </div>
         </form>
     </div>
@@ -37,7 +37,7 @@
 
 <script setup>
 import { reactive } from 'vue';
-import { useUserDataStore } from '../../stores/userdata';
+import { useUserDataStore } from '../../services/stores/userdata.js';
 
 const userDataStore = useUserDataStore();
 const data = reactive({
@@ -62,4 +62,4 @@ function register() {
   userDataStore.register(requestData);
 }
 
-</script>
+</script>../../services/stores/userdata
