@@ -29,7 +29,7 @@
           </div>
         <div class="row d-flex align-items-center mx-auto">
             <button @click.prevent="onButtonClicked" type="submit" class="btn btn-primary col-lg-4">Zarejestruj się</button>
-            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/logowanie`">Masz już konto?</router-link>
+            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/zaloguj`">Masz już konto?</router-link>
         </div>
         </form>
     </div>
@@ -37,6 +37,7 @@
 
 <script setup>
 import { reactive } from 'vue';
+import { useUserDataStore } from '../../services/stores/userdata.js';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
 
@@ -54,6 +55,7 @@ function onButtonClicked() {
     register();
 }
 
+</script>../../services/stores/userdata
 async function register() {
   const registered = await userDataStore.register({phone: "997997997", name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
   if (registered) {
@@ -61,4 +63,4 @@ async function register() {
   }
 }
 
-</script>
+</script>../../stores/userdata.js

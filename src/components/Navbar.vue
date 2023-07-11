@@ -21,7 +21,7 @@
 
 <script setup>
 import { computed, inject, reactive, watch } from 'vue';
-import { useUserDataStore } from '../stores/userdata';
+import { useUserDataStore } from '../services/stores/userdata.js';
 import { useRouter } from 'vue-router';
 
 const eventBus = inject('$eventBus');
@@ -41,7 +41,7 @@ eventBus.$on('userLoggedOut', () => {
 });
 
 const userLink = computed(() => {
-  return !(data.isLoggedIn) ? '/logowanie' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
+  return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
 });
 
 const userLinkText = computed(() => {

@@ -7,7 +7,7 @@
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUserDataStore } from '../../stores/userdata';
+import { useUserDataStore } from '../../services/stores/userdata';
 import { useRouter } from 'vue-router';
 
 const eventBus = inject('$eventBus');
@@ -19,10 +19,10 @@ const data = /* here will be the logic for retrieving user data from storage, ri
 
 async function logOut() {
     const loggedOut = await userData.logOut();
-    
     if (loggedOut) {
         eventBus.$emit('userLoggedOut');
         router.push('/');
     }
+
 }
-</script>
+</script>../../services/stores/userdata../../stores/userdata
