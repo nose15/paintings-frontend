@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { usePaintingsStore } from '../../stores/paintings';
+import { usePaintingsStore } from '../../services/stores/paintings.js';
 const paintings = usePaintingsStore();
 const { id } = defineProps(['id']);
 const painting = paintings.getPaintingByID(id);
@@ -29,4 +29,4 @@ const getImageURL = () => {
     return new URL(`../../assets/img/obraz1.jpg`, import.meta.url).href;
 };
 
-</script>
+</script>../../services/stores/paintings
