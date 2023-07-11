@@ -29,4 +29,4 @@ const getImageURL = () => {
     return new URL(`../../assets/img/obraz1.jpg`, import.meta.url).href;
 };
 
-</script>../../services/stores/paintings../../stores/paintings.js
+</script>

@@ -7,7 +7,7 @@
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUserDataStore } from '../../stores/userdata';
+import { useUserDataStore } from '../../services/stores/userdata';
 import { useRouter } from 'vue-router';
 
 const eventBus = inject('$eventBus');
@@ -24,5 +24,6 @@ async function logOut() {
         router.push('/');
     }
 
+
 }
-</script>../../services/stores/userdata../../stores/userdata
+</script>

@@ -42,6 +42,7 @@ eventBus.$on('userLoggedOut', () => {
 
 const userLink = computed(() => {
   return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
+  return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
 });
 
 const userLinkText = computed(() => {

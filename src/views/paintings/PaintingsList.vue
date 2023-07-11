@@ -11,4 +11,4 @@
 import { usePaintingsStore } from '../../stores/paintings.js';
 import PaintingListItem from '../../components/painting/PaintingListItem.vue';
 const paintingsStore = usePaintingsStore();
-</script>../../services/stores/paintings../../stores/paintings.js
+</script>
