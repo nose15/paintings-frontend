@@ -7,7 +7,7 @@
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUserDataStore } from '../../services/stores/userdata';
+import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
 
 const eventBus = inject('$eventBus');

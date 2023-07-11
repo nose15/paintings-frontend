@@ -26,7 +26,7 @@
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserDataStore } from '../../services/stores/userdata.js';
+import { useUserDataStore } from '../../stores/userdata.js';
 
 const eventBus = inject("$eventBus");
 const router = useRouter();

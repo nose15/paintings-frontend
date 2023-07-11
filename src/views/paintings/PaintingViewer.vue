@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { usePaintingsStore } from '../../services/stores/paintings.js';
+import { usePaintingsStore } from '../../stores/paintings.js';
 const paintings = usePaintingsStore();
 const { id } = defineProps(['id']);
 const painting = paintings.getPaintingByID(id);

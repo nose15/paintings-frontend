@@ -37,7 +37,6 @@
 
 <script setup>
 import { reactive } from 'vue';
-import { useUserDataStore } from '../../services/stores/userdata.js';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
 
@@ -55,7 +54,6 @@ function onButtonClicked() {
     register();
 }
 
-</script>../../services/stores/userdata
 async function register() {
   const registered = await userDataStore.register({phone: "997997997", name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
   if (registered) {
@@ -63,4 +61,5 @@ async function register() {
   }
 }
 
-</script>../../stores/userdata.js
+
+</script>
