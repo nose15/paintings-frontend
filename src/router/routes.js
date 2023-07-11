@@ -24,11 +24,6 @@ const router = createRouter({
         {
             path: '/', 
             component: HomePage,
-            // children: [
-            //     { path: '', component: PagesList },
-            //     { path: 'create', component: CreatePage },
-            //     { path: ':id/edit', component: PageEdit, props: true }
-            // ]
         },
         {
             path: '/obrazy',
@@ -66,7 +61,7 @@ const router = createRouter({
             props: true
         },
         {
-            path: '/logowanie',
+            path: '/zaloguj',
             component: Login
         },
         {

@@ -37,7 +37,11 @@
 
 <script setup>
 import { reactive } from 'vue';
+import { useUserDataStore } from '../../stores/userdata';
+import { useRouter } from 'vue-router';
 
+const userDataStore = useUserDataStore();
+const router = useRouter();
 const data = reactive({
     name: "",
     surname: "",
@@ -50,30 +54,11 @@ function onButtonClicked() {
     register();
 }
 
-function register() {
-    postData("http://localhost:8000/api/register", {name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
+async function register() {
+  const registered = await userDataStore.register({phone: "997997997", name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
+  if (registered) {
+    router.push('/');
+  }
 }
-
-async function postData(url = "", data = {}) {
-    const response = await fetch(url, {
-        method: "POST",
-        mode: "cors", 
-        cache: "no-cache", 
-        credentials: "omit",
-        headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8000/",
-            "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer", 
-        body: JSON.stringify(data)
-    });
-
-    console.log(response);
-}
-
-
-
-
 
 </script>
