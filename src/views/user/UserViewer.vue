@@ -23,6 +23,10 @@ const router = useRouter();
 const { userId } = defineProps(['userId']);
 const data = userData.getData;
 
+if (userData.getID == null) {
+    router.push('/');
+}
+
 async function logOut() {
     const loggedOut = await userData.logOut();
     if (loggedOut) {

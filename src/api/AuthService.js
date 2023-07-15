@@ -46,6 +46,7 @@ async function checkAuthorization(token) {
 
     try {
         const response = await ApiWrapper.get('check-auth', requestHeaders);
+        return response.is_user_auth;
     }
     catch (error) {
         console.error(error);

@@ -6,17 +6,17 @@ import { computed, reactive, ref } from "vue";
 const bearerTokenKey = "token"
 const IDKey = "user_id";
 
-const bearerToken = ref(checkBearerToken());
-const id = ref(checkID());
-let dataRetrieved = false;
-
-fetchUserData();
-
 const userData = reactive({
     name: "",
     email: "",
     phone: "",
 });
+
+const id = ref(checkID());
+let dataRetrieved = false;
+const bearerToken = ref(await checkBearerToken());
+
+fetchUserData();
 
 async function fetchUserData() {
     if (bearerToken.value != "null") {
@@ -27,14 +27,16 @@ async function fetchUserData() {
     }
 }
 
-function checkBearerToken() {
+async function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
 
     if (currentToken == "null") {
         return "null";
     }
 
-    if (!isTokenLoggedIn(currentToken)) {
+    const isLoggedIn = await isTokenLoggedIn(currentToken)
+
+    if (!isLoggedIn) {
         clearData();
         return "null";
     }
@@ -42,9 +44,9 @@ function checkBearerToken() {
     return currentToken;
 }
 
-function isTokenLoggedIn(token) {
-    AuthService.checkAuthorization(token);
-    return true;
+async function isTokenLoggedIn(token) {
+    const isLogged = await AuthService.checkAuthorization(token);
+    return isLogged;
 }
 
 function checkID() {
