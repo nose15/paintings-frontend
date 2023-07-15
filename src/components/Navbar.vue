@@ -29,7 +29,7 @@ const router = useRouter();
 const userData = useUserDataStore();
 
 const data = reactive({
-  isLoggedIn: userData.isLoggedIn(),
+  isLoggedIn: userData.isLoggedIn,
 })
 
 eventBus.$on('userLoggedIn', () => {
@@ -41,17 +41,20 @@ eventBus.$on('userLoggedOut', () => {
 });
 
 const userLink = computed(() => {
-  return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
-  return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${1}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
+  return !(data.isLoggedIn) ? '/zaloguj' : `/uzytkownik/${id.value}` // for now we use data.userToken as id just for testing because we dont have an endpoint for user data
 });
 
 const userLinkText = computed(() => {
   return !(data.isLoggedIn) ? 'Zaloguj' : `Uzytkownik` 
 });
 
+const id = computed(() => {
+  return userData.getID;
+});
+
 function update()
 {
-  data.isLoggedIn = userData.isLoggedIn();
+  data.isLoggedIn = userData.isLoggedIn;
 }
 
 </script>

@@ -47,13 +47,14 @@ const router = createRouter({
                 {
                     path: '',
                     component: UserViewer,
+                    props: true,
                 },
                 {
                     path: 'edycja',
                     component: UserEdit,
+                    props: true,
                 },
             ],
-            props: true
         },
         {
             path: `/zamowienie${propsIndicator}:orderId`,

@@ -3,7 +3,7 @@ import { ApiWrapper } from "./ApiWrapper";
 async function loginAsync(credentials) {
     try {
         const response = await ApiWrapper.post('login', {}, credentials);
-        return response.token;
+        return response;
     }
     catch(error) {
         console.error(error);
@@ -38,8 +38,24 @@ async function registerAsync(data) {
     }
 }
 
+async function checkAuthorization(token) {
+    const requestHeaders = {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json",
+    }
+
+    try {
+        const response = await ApiWrapper.get('check-auth', requestHeaders);
+    }
+    catch (error) {
+        console.error(error);
+    }
+
+}
+
 export const AuthService = {
     loginAsync,
     logoutAsync,
-    registerAsync
+    registerAsync,
+    checkAuthorization
 }

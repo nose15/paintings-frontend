@@ -2,7 +2,8 @@ import { ApiError } from './utils/ApiError.js'
 
 const config = {
     baseURL: "http://localhost:8000/api/",
-    headers: { 
+    headers: {
+        "Access-Control-Allow-Origin": "http://localhost:8000/api/",
         "Content-Type": "application/json",
     }
 }
@@ -39,5 +40,6 @@ async function request(url="", method, headers, data=null) {
 export const ApiWrapper = { 
     configure,
     get: (url, headers) => request(url, 'GET', headers),
-    post: (url, headers, data) => request(url, 'POST', headers, data)
+    post: (url, headers, data) => request(url, 'POST', headers, data),
+    delete: (url, headers) => request(url, 'DELETE', headers)
 }

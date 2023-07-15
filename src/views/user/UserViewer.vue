@@ -1,21 +1,27 @@
 <template>
-    <h1>UserViewer</h1>
-    <p>{{ data.userId }}</p>
-    <button type="button" class="btn btn-danger" @click.prevent="logOut">Wyloguj się</button>
+    <div class="container">
+        <h1>UserViewer {{ data.id }}</h1>
+        <button type="button" class="btn btn-danger" @click.prevent="deleteProfile">Delet</button>
+        <button type="button" class="btn btn-warning" @click.prevent="logOut">Wyloguj się</button>
+        <p>{{ data.id }}</p>
+        <p>{{ data.name }}</p>
+        <p>{{ data.email }}</p>
+        <p>{{ data.phone }}</p>
+    </div>
 </template>
 
 <script setup>
 import { inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUserDataStore } from '../../services/stores/userdata';
+import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
 
 const eventBus = inject('$eventBus');
 const userData = useUserDataStore();
 const router = useRouter();
 
-const route = useRoute();
-const data = /* here will be the logic for retrieving user data from storage, right now there's no endpoint */ reactive({ userId: route.params.userId });
+const { userId } = defineProps(['userId']);
+const data = userData.getData;
 
 async function logOut() {
     const loggedOut = await userData.logOut();
@@ -23,7 +29,13 @@ async function logOut() {
         eventBus.$emit('userLoggedOut');
         router.push('/');
     }
+}
 
-
+async function deleteProfile() {
+    const deleted = await userData.deleteProfile();
+    if (deleted) {
+        eventBus.$emit('profileDeleted');
+        router.push('/');
+    }
 }
 </script>

@@ -1,32 +1,91 @@
 import { defineStore } from "pinia";
 import { AuthService } from '../api/AuthService.js';
+import { UserService } from "../api/UserService.js";
+import { computed, reactive, ref } from "vue";
 
-// more functionality will come once there's an endpoint for retrieving user data
 const bearerTokenKey = "token"
+const IDKey = "user_id";
+
+const bearerToken = ref(checkBearerToken());
+const id = ref(checkID());
+let dataRetrieved = false;
+
+fetchUserData();
+
+const userData = reactive({
+    name: "",
+    email: "",
+    phone: "",
+});
+
+async function fetchUserData() {
+    if (bearerToken.value != "null") {
+        if (!dataRetrieved) {
+            const response = await UserService.fetchDataAsync(bearerToken.value, id.value);
+            setData(response.data);
+        }
+    }
+}
 
 function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
-    if (!tokenLoggedIn(currentToken)) {
-        // clear local user data
+
+    if (currentToken == "null") {
         return "null";
     }
+
+    if (!isTokenLoggedIn(currentToken)) {
+        clearData();
+        return "null";
+    }
+
     return currentToken;
 }
 
-function tokenLoggedIn(token) {
-    // request to API that checks if the token is still available
+function isTokenLoggedIn(token) {
+    AuthService.checkAuthorization(token);
     return true;
 }
 
-let bearerToken = checkBearerToken();
+function checkID() {
+    let currentID = localStorage.getItem(IDKey);
+    return currentID;
+}
+
+function setToken(token) {
+    bearerToken.value = token;
+    localStorage.setItem(bearerTokenKey, bearerToken.value);
+}
+
+function setID(newID) {
+    id.value = newID;
+    localStorage.setItem(IDKey, newID);
+}
+
+function setData(dataObject) {
+    userData.name = dataObject.name,
+    userData.email = dataObject.email,
+    userData.phone = dataObject.phone
+    dataRetrieved = true;
+}
+
+function clearData() {
+    userData.name = "",
+    userData.email = "",
+    userData.phone = "",
+    setID(null);
+    dataRetrieved = false;
+}
 
 export const useUserDataStore = defineStore('user-data', () => {
 
     async function logIn(email, password) {
-        const token = await AuthService.loginAsync({email: email, password: password});
+        const response = await AuthService.loginAsync({email: email, password: password});
 
-        if (token != null) {
-            setToken(token);
+        if (response != null) {
+            setToken(response.token);
+            setID(response.user.id);
+            setData(response.user);
             return true;
         }
         else {
@@ -35,10 +94,11 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
     
     async function logOut() {
-        const loggedOut = await AuthService.logoutAsync(bearerToken);
+        const loggedOut = await AuthService.logoutAsync(bearerToken.value);
 
         if (loggedOut) {
-            deleteToken();
+            setToken("null");
+            clearData();
             return true;
         }
         else {
@@ -52,24 +112,22 @@ export const useUserDataStore = defineStore('user-data', () => {
         return registered;
     }
 
-
-    function setToken(token) {
-        bearerToken = token;
-        localStorage.setItem(bearerTokenKey, bearerToken);
+    async function deleteProfile() {
+        const data = await UserService.deleteProfileAsync(bearerToken.value, id);
+        clearData();
     }
 
-    function getToken() {
-        return bearerToken;
-    }
+    const getID = computed(() => id.value);
+    const getData = computed(() => userData);
+    const isLoggedIn = computed(() => (bearerToken.value == "null") ? false : true );
 
-    function deleteToken() {
-        bearerToken = "null";
-        localStorage.setItem(bearerTokenKey, bearerToken);
-    }
-
-    function isLoggedIn() {
-        return bearerToken == "null" ? false : true
-    }
-
-    return { setToken, getToken, deleteToken, isLoggedIn, logIn, logOut, register };
+    return { 
+        getID,
+        isLoggedIn,
+        getData,
+        logIn, 
+        logOut, 
+        register,
+        deleteProfile,
+    };
 });
