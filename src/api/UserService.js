@@ -39,6 +39,7 @@ async function deleteProfileAsync(token, id) {
 
     try {
         const response = ApiWrapper.delete(`users/${id}`, requestHeaders);
+        return true;
     }
     catch (error) {
         console.error(error);

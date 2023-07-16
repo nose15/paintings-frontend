@@ -42,6 +42,7 @@ async function deleteProfile() {
     const deleted = await userData.deleteProfile();
     if (deleted) {
         eventBus.$emit('profileDeleted');
+        eventBus.$emit('userLoggedOut');
         router.push('/');
     }
 }
