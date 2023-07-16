@@ -8,20 +8,23 @@
         <p>{{ data.email }}</p>
         <p>{{ data.phone }}</p>
     </div>
+    <user-order-list v-if="data.orders.length > 0" :orders="data.orders"></user-order-list>
 </template>
 
 <script setup>
-import { inject, reactive } from 'vue';
+import { inject, reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
+import UserOrderList from '../../components/user/UserOrdersList.vue'
 
 const eventBus = inject('$eventBus');
 const userData = useUserDataStore();
 const router = useRouter();
 
+const data = computed(() => userData.getData)
+
 const { userId } = defineProps(['userId']);
-const data = userData.getData;
 
 if (userData.getID == null) {
     router.push('/');

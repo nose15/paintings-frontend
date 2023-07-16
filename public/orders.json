@@ -1,0 +1,35 @@
+[
+
+    {
+ 
+       "id":1,
+ 
+       "status":"przyjete",
+ 
+       "createdAt":"2014-03-12"
+ 
+    },
+ 
+    {
+ 
+       "id":2,
+ 
+       "status":"w drodze",
+ 
+       "createdAt":"2014-02-12"
+ 
+    },
+ 
+    {
+ 
+       "id":3,
+ 
+       "status":"dostarczone",
+ 
+       "createdAt":"2014-01-12"
+ 
+    }
+ 
+ ]
+ 
+ 

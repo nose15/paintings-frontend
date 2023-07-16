@@ -10,6 +10,7 @@ import UserEdit from '../views/user/UserEdit.vue';
 import UserViewer from '../views/user/UserViewer.vue';
 
 import OrderViewer from '../views/order/OrderViewer.vue';
+import OrderCancel from '../views/order/OrderCancel.vue';
 
 import Login from '../views/authentication/Login.vue';
 import Register from '../views/authentication/Register.vue';
@@ -58,8 +59,18 @@ const router = createRouter({
         },
         {
             path: `/zamowienie${propsIndicator}:orderId`,
-            component: OrderViewer,
-            props: true
+            children: [
+                {
+                    path: '',
+                    component: OrderViewer,
+                    props: true
+                },
+                {
+                    path: 'odwolaj',
+                    component: OrderCancel,
+                    props: true
+                }
+            ]
         },
         {
             path: '/zaloguj',

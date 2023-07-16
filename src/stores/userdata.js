@@ -10,19 +10,22 @@ const userData = reactive({
     name: "",
     email: "",
     phone: "",
+    orders: [],
 });
 
 const id = ref(checkID());
 let dataRetrieved = false;
 const bearerToken = ref(await checkBearerToken());
 
-fetchUserData();
+fetchData();
 
-async function fetchUserData() {
+async function fetchData() {
     if (bearerToken.value != "null") {
         if (!dataRetrieved) {
-            const response = await UserService.fetchDataAsync(bearerToken.value, id.value);
-            setData(response.data);
+            const responseData = await UserService.fetchDataAsync(bearerToken.value, id.value);
+            const responseOrders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
+            setOrders(responseOrders);
+            setData(responseData.data);
         }
     }
 }
@@ -79,6 +82,10 @@ function clearData() {
     dataRetrieved = false;
 }
 
+function setOrders(ordersObject) {
+    userData.orders = ordersObject;
+}
+
 export const useUserDataStore = defineStore('user-data', () => {
 
     async function logIn(email, password) {
@@ -88,6 +95,9 @@ export const useUserDataStore = defineStore('user-data', () => {
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
+
+            const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
+            setOrders(orders);
             return true;
         }
         else {
