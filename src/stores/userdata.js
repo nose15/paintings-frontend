@@ -15,8 +15,9 @@ const userData = reactive({
 
 const id = ref(checkID());
 let dataRetrieved = false;
-const bearerToken = ref(await checkBearerToken());
+const bearerToken = ref(localStorage.getItem(bearerTokenKey));
 
+checkBearerToken();
 fetchData();
 
 async function fetchData() {
@@ -32,16 +33,16 @@ async function fetchData() {
 
 async function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
+    let currentID = localStorage.getItem(IDKey);
 
-    if (currentToken == "null") {
-        return "null";
+    if (currentToken == "null" || currentID == "null") {
+        clearData();
     }
 
     const isLoggedIn = await isTokenLoggedIn(currentToken)
 
     if (!isLoggedIn) {
         clearData();
-        return "null";
     }
 
     return currentToken;
@@ -78,7 +79,8 @@ function clearData() {
     userData.name = "",
     userData.email = "",
     userData.phone = "",
-    setID(null);
+    setID("null");
+    setToken("null");
     dataRetrieved = false;
 }
 
@@ -125,8 +127,15 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
 
     async function deleteProfile() {
-        const data = await UserService.deleteProfileAsync(bearerToken.value, id);
-        clearData();
+        const deleted = await UserService.deleteProfileAsync(bearerToken.value, id.value);
+        
+        if (deleted) {
+            clearData();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     const getID = computed(() => id.value);
