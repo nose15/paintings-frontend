@@ -12,7 +12,7 @@
                     <a @click.prevent="" role="button" class="col-6 btn btn-warning">Kup teraz</a>
                 </div>
                 <div class="row m-3 justify-content-center">
-                    <button @click.prevent="" type="button" class="col-6 btn btn-primary">Do koszyka</button>
+                    <button @click.prevent="addToCart(id)" type="button" class="col-6 btn btn-primary">Do koszyka</button>
                 </div>
             </div>
         </div>
@@ -21,12 +21,19 @@
 
 <script setup>
 import { usePaintingsStore } from '../../stores/paintings.js';
+import { useCartStore } from '../../stores/shopping_cart';
 const paintings = usePaintingsStore();
+const cart = useCartStore();
+
 const { id } = defineProps(['id']);
 const painting = paintings.getPaintingByID(id);
 
 const getImageURL = () => {
     return new URL(`../../assets/img/obraz1.jpg`, import.meta.url).href;
 };
+
+function addToCart(id) {
+    cart.addToCart(parseInt(id));
+}
 
 </script>

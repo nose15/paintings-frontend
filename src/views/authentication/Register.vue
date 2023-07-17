@@ -36,12 +36,15 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, inject } from 'vue';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
 
 const userDataStore = useUserDataStore();
 const router = useRouter();
+
+const eventBus = inject('$eventBus');
+
 const data = reactive({
     name: "",
     surname: "",
@@ -56,8 +59,13 @@ function onButtonClicked() {
 
 async function register() {
   const registered = await userDataStore.register({phone: "997997997", name: `${data.name} ${data.surname}`, email: data.email, password: data.password, password_confirmation: data.password_confirmation});
+
   if (registered) {
-    router.push('/');
+    const loggedIn = await userDataStore.logIn(data.email, data.password)
+    if (loggedIn) {
+      eventBus.$emit('userLoggedIn');
+      router.push('/');
+    }
   }
 }
 

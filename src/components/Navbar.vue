@@ -13,6 +13,9 @@
         <li>
           <router-link class="nav-link" active-class="nav-link-active" :to="userLink">{{ userLinkText }}</router-link>
         </li>
+        <li>
+          <router-link class="nav-link" active-class="nav-link-active" :to="'/koszyk'">Koszyk</router-link>
+        </li>
       </ul>
     </div>
   </div>

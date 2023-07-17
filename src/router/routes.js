@@ -15,7 +15,7 @@ import OrderCancel from '../views/order/OrderCancel.vue';
 import Login from '../views/authentication/Login.vue';
 import Register from '../views/authentication/Register.vue';
 
-import Basket from '../views/Basket.vue';
+import Cart from '../views/Cart.vue';
 
 const propsIndicator = '/';
 
@@ -82,7 +82,7 @@ const router = createRouter({
         },
         {
             path: '/koszyk',
-            component: Basket
+            component: Cart
         }
     ]
 });
