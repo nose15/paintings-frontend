@@ -1,8 +1,6 @@
 export default {
     getCookie(key) {
         let cookies = document.cookie;
-        console.log(cookies);
-
         let value = undefined; 
         cookies = cookies.split(';');
         

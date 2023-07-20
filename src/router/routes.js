@@ -17,6 +17,8 @@ import Register from '../views/authentication/Register.vue';
 
 import Cart from '../views/Cart.vue';
 
+import Checkout from '../views/Checkout.vue';
+
 const propsIndicator = '/';
 
 const router = createRouter({
@@ -83,6 +85,10 @@ const router = createRouter({
         {
             path: '/koszyk',
             component: Cart
+        },
+        {
+            path: '/kasa',
+            component: Checkout
         }
     ]
 });
