@@ -13,8 +13,6 @@ const cartData = reactive({
     total: 0,
     itemIDs: [],
     items: [],
-    guest: true,
-    userID: null,
 });
 
 function setItemsCookie() {
@@ -78,7 +76,7 @@ export const useCartStore = defineStore('cart-store', () => {
             total += item.price;
         });
 
-        return total;
+        return total.toFixed(2);
     });
 
     function retrieveItemsCookie() {
@@ -94,7 +92,7 @@ export const useCartStore = defineStore('cart-store', () => {
         items.forEach(id => {
             cartData.items.push(paintingStore.getPaintingByID(id));
         });
-    
+        
     }
 
     return { addToCart, removeFromCart, getCartItems, getTotalPrice }

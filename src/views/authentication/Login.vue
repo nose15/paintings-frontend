@@ -17,7 +17,7 @@
           </div>
         <div class="row d-flex align-items-center mx-auto">
             <button @click.prevent="onButtonClicked" type="submit" class="btn btn-primary col-lg-4">Zaloguj</button>
-            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="`/rejestracja`">Nie masz konta?</router-link>
+            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="{path: '/rejestracja', query: {redirect: '/kasa'}}">Nie masz konta?</router-link>
         </div>
         </form>
     </div>
@@ -25,12 +25,15 @@
 
 <script setup>
 import { inject, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useUserDataStore } from '../../stores/userdata.js';
 
 const eventBus = inject("$eventBus");
 const router = useRouter();
+const route = useRoute();
 const userDataStorage = useUserDataStore();
+
+const routeQuerries = route.query;
 
 const data = reactive({
     email: "",
@@ -47,7 +50,13 @@ async function logIn() {
 
     if (loggedIn == true) {
         eventBus.$emit('userLoggedIn');
-        router.push('/');
+
+        if ("redirect" in routeQuerries){
+          router.push(routeQuerries.redirect);
+        } 
+        else {
+          router.push('/');
+        }
     }
 }
 
