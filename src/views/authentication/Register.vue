@@ -38,10 +38,13 @@
 <script setup>
 import { reactive, inject } from 'vue';
 import { useUserDataStore } from '../../stores/userdata';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const userDataStore = useUserDataStore();
 const router = useRouter();
+const route = useRoute();
+
+const routeQuerries = route.query;
 
 const eventBus = inject('$eventBus');
 
@@ -64,7 +67,14 @@ async function register() {
     const loggedIn = await userDataStore.logIn(data.email, data.password)
     if (loggedIn) {
       eventBus.$emit('userLoggedIn');
-      router.push('/');
+
+      if ("redirect" in routeQuerries)
+      {
+        router.push(routeQuerries.redirect);
+      }
+      else {
+        router.push('/');
+      }
     }
   }
 }

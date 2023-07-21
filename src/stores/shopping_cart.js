@@ -12,20 +12,8 @@ const config = {
 const cartData = reactive({
     total: 0,
     itemIDs: [],
-    guest: true,
-    userID: null,
+    items: [],
 });
-
-function retrieveItemsCookie() {
-    const cookieStr = Cookies.get(config.cartCookieName);
-
-    if (cookieStr == undefined) {
-        setItemsCookie();
-    }
-    
-    const items = JSON.parse(Cookies.get(config.cartCookieName));
-    cartData.itemIDs = items;
-}
 
 function setItemsCookie() {
     Cookies.set(config.cartCookieName, JSON.stringify(cartData.itemIDs), { expires: config.cartCookieExpirationDays });
@@ -35,16 +23,28 @@ function isInStock(itemID) {
     return true;
 }
 
-retrieveItemsCookie();
+function isInCart(itemID) {
+    if (cartData.itemIDs.includes(itemID)) {
+        return true;
+    }
+    return false;
+}
 
 export const useCartStore = defineStore('cart-store', () => {
     const paintingStore = usePaintingsStore();
 
+    retrieveItemsCookie();
+
     function addToCart(itemID) {
         const inStock = isInStock(itemID);
+        const inCart = isInCart(itemID);
 
-        if (inStock) {
+        if (inStock && !inCart) {
+            const item = paintingStore.getPaintingByID(itemID);
+            
             cartData.itemIDs.push(itemID);
+            cartData.items.push(item);
+
             setItemsCookie();
             return true;
         }
@@ -57,6 +57,7 @@ export const useCartStore = defineStore('cart-store', () => {
 
         if (index != -1) {
             cartData.itemIDs.splice(index, 1);
+            cartData.items.splice(index, 1);
             setItemsCookie();
             return true;
         }
@@ -65,14 +66,34 @@ export const useCartStore = defineStore('cart-store', () => {
     }
 
     const getCartItems = computed(() => {
-        let cartItems = [];
-
-        cartData.itemIDs.forEach(id => {
-            cartItems.push(paintingStore.getPaintingByID(id))
-        });
-
-        return cartItems;
+        return cartData.items;
     });
 
-    return { addToCart, removeFromCart, getCartItems }
+    const getTotalPrice = computed(() => {
+        let total = 0;
+
+        cartData.items.forEach((item) => {
+            total += item.price;
+        });
+
+        return total.toFixed(2);
+    });
+
+    function retrieveItemsCookie() {
+        const cookieStr = Cookies.get(config.cartCookieName);
+    
+        if (cookieStr == undefined) {
+            setItemsCookie();
+        }
+        
+        const items = JSON.parse(Cookies.get(config.cartCookieName));
+        cartData.itemIDs = items;
+    
+        items.forEach(id => {
+            cartData.items.push(paintingStore.getPaintingByID(id));
+        });
+        
+    }
+
+    return { addToCart, removeFromCart, getCartItems, getTotalPrice }
 });

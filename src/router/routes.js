@@ -17,10 +17,14 @@ import Register from '../views/authentication/Register.vue';
 
 import Cart from '../views/Cart.vue';
 
+import Checkout from '../views/Checkout.vue';
+
+import Summary from '../views/Summary.vue';
+
 const propsIndicator = '/';
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes: [
         {
             path: '/', 
@@ -83,8 +87,20 @@ const router = createRouter({
         {
             path: '/koszyk',
             component: Cart
+        },
+        {
+            path: '/kasa',
+            component: Checkout
+        },
+        {
+            path: '/podsumowanie',
+            component: Summary
         }
     ]
+});
+
+
+router.beforeEach((to, from) => {
 });
 
 export default router;
