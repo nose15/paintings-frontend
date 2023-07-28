@@ -17,7 +17,7 @@
           </div>
         <div class="row d-flex align-items-center mx-auto">
             <button @click.prevent="onButtonClicked" type="submit" class="btn btn-primary col-lg-4">Zaloguj</button>
-            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="{path: '/rejestracja', query: {redirect: '/kasa'}}">Nie masz konta?</router-link>
+            <router-link class="link-opacity-50-hover col-lg-5 me-auto" :to="{path: '/rejestracja', query: routeQuerries}">Nie masz konta?</router-link>
         </div>
         </form>
     </div>

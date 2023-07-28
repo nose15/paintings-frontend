@@ -17,8 +17,8 @@ const id = ref(checkID());
 let dataRetrieved = false;
 const bearerToken = ref(localStorage.getItem(bearerTokenKey));
 
-checkBearerToken();
-fetchData();
+await checkBearerToken();
+await fetchData();
 
 async function fetchData() {
     if (bearerToken.value != "null") {

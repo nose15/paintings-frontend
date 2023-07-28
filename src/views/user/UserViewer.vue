@@ -26,7 +26,7 @@ const data = computed(() => userData.getData)
 
 const { userId } = defineProps(['userId']);
 
-if (userData.getID == null) {
+if (userData.getID == "null") {
     router.push('/');
 }
 
