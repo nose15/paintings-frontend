@@ -1,4 +1,5 @@
 import { ApiWrapper } from "./ApiWrapper";
+import { AuthError } from './utils/AuthError.js'
 
 async function loginAsync(credentials) {
     try {
@@ -6,8 +7,7 @@ async function loginAsync(credentials) {
         return response;
     }
     catch(error) {
-        console.error(error);
-        return null;
+        throw new AuthError(error.statusCode, error.message);
     }
 }
 
@@ -33,8 +33,7 @@ async function registerAsync(data) {
         return true;
     }
     catch(error) {
-        console.error(error);
-        return false;
+        throw new AuthError(error.statusCode, error.message);
     }
 }
 

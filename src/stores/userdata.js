@@ -91,9 +91,9 @@ function setOrders(ordersObject) {
 export const useUserDataStore = defineStore('user-data', () => {
 
     async function logIn(email, password) {
-        const response = await AuthService.loginAsync({email: email, password: password});
 
-        if (response != null) {
+        try {
+            const response = await AuthService.loginAsync({email: email, password: password});
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
@@ -101,9 +101,9 @@ export const useUserDataStore = defineStore('user-data', () => {
             const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
             setOrders(orders);
             return true;
-        }
-        else {
-            return false;
+        } 
+        catch (error) {
+            return error.statusCode;
         }
     }
     
@@ -122,8 +122,13 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
 
     async function register(data) {
-        const registered = await AuthService.registerAsync(data);
-        return registered;
+        try {
+            const registered = await AuthService.registerAsync(data);
+            return registered;
+        }
+        catch (error) {
+            return error.statusCode;
+        }
     }
 
     async function deleteProfile() {
