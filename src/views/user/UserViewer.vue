@@ -22,12 +22,16 @@ const eventBus = inject('$eventBus');
 const userData = useUserDataStore();
 const router = useRouter();
 
-const data = computed(() => userData.getData)
+const data = computed(() => userData.getData);
 
 const { userId } = defineProps(['userId']);
 
 if (userData.getID == "null") {
     router.push('/');
+}
+
+if (userData.getID != userId) {
+    router.push(`${userData.getID}`);
 }
 
 async function logOut() {
