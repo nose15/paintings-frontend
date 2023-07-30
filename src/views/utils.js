@@ -1,9 +1,12 @@
 function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (regex.test(email)) {
-        return true;
+    if (email.length > 0) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (regex.test(email)) {
+            return true;
+        }
+        return "Niepoprawny adres email";
     }
-    return "Niepoprawny adres email";
+    return "";
 }
 
 function validateName(name) {

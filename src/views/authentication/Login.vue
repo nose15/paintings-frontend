@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, inject, reactive, watch } from 'vue';
+import { inject, reactive, watch } from 'vue';
 import { validateEmail } from '../utils.js';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserDataStore } from '../../stores/userdata.js';
@@ -45,36 +45,63 @@ const data = reactive({
     password_error: ""
 });
 
-function onButtonClicked() {
-    logIn();
-}
-
-async function logIn() {
-  clearErrors();
-
-  const validated = validateEmail(data.email);
-
-  if (validated) {
-      const logInResponse = await userDataStorage.logIn(data.email, data.password);
-
-      if (logInResponse == true) {
-          eventBus.$emit('userLoggedIn');
-          navigate();
-      }
-      else {
-        asignErrors(logInResponse);
-      }
-  } 
-  else {
-    asignErrors(403);
-  }
-}
-
 watch(() => data.email, (oldEmail, newEmail) => {
   if (newEmail != oldEmail) {
     clearErrors();
   }
 });
+
+
+async function onButtonClicked() {
+    clearErrors();
+    const isValid = validate();
+
+    if (!isValid) {
+      return;
+    }
+
+    const loggedIn = await logIn();
+
+    if (loggedIn) {
+      navigate();
+    }
+}
+
+function clearErrors() {
+  data.email_error = "";
+  data.password_error = "";
+}
+
+
+function validate() {
+  if (validateEmail(data.email)) {
+    return true;
+  }
+
+  asignErrors(403);
+  return false;
+}
+
+async function logIn() {
+  const logInResponse = await userDataStorage.logIn(data.email, data.password);
+
+  if (logInResponse == true) {
+    eventBus.$emit('userLoggedIn');
+    return true;
+  }
+
+  asignErrors(logInResponse);
+  return false;
+}
+
+function navigate() {
+  if ("redirect" in routeQuerries){
+      router.push(routeQuerries.redirect);
+  } 
+  else {
+    router.push('/');
+  }
+}
 
 function asignErrors(errorCode) {
   switch (errorCode) {
@@ -93,20 +120,4 @@ function asignErrors(errorCode) {
   }
   data.password = "";
 }
-
-
-function clearErrors() {
-  data.email_error = "";
-  data.password_error = "";
-}
-
-function navigate() {
-  if ("redirect" in routeQuerries){
-      router.push(routeQuerries.redirect);
-  } 
-  else {
-    router.push('/');
-  }
-}
-
 </script>
