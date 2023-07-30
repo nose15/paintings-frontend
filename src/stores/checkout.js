@@ -1,39 +1,57 @@
 import { defineStore } from "pinia";
-import { reactive, ref, computed } from "vue";
+import { reactive, computed, watch } from "vue";
+import { useUserDataStore } from "./userdata";
+import { useCartStore } from "./shopping_cart";
+ 
 
-const addressData = reactive({
-    city: "",
-    postal_code: "",
-    street: "",
-    house_number: "",
-    flat_number: "",
-
-    is_company: false,
-    company_name: "",
-    NIP_number: "",
-    extra_info: "",
+const data = reactive({
+    credentials: {
+        name: "",
+        email: "",
+        phone: "",
+    },
+    userId: null,
+    paymentMethod: "",
+    isCompany: false,
+    deliveryMethod: "",
+    address: {
+        city: "",
+        postal_code: "",
+        street: "",
+        house_number: "",
+        flat_number: "",
+    },
+    companyInfo: {
+        company_name: "",
+        NIP_number: "",
+    },
+    extra_info: ""
 });
 
-const paymentMethod = ref("");
+const cart = reactive({
+    items: [],
+    total_price: 0,
+});
 
 export const useCheckoutStore = defineStore('checkout-store', () => {
-    function setAddressData(newData) {
-        for (const [key, value] of Object.entries(newData)) {
-            addressData[key] = value;
-        };
+    // function setAddressData(newData) {
+    //     for (const [key, value] of Object.entries(newData)) {
+    //         addressData[key] = value;
+    //     };
+    // }
+
+    function setData(newData) {
+        for (const key in data) {
+            data[key] = newData[key];
+        }
     }
 
-    function setPaymentMethod(newPaymentMethod) {
-        paymentMethod.value = newPaymentMethod;
-    }
-
-    const getAddressData = computed(() => {
-        return addressData;
+    const getData = computed(() => {
+        return data;
     });
 
-    const getPaymentMethod = computed(() => {
-        return paymentMethod.value;
-    })
-
-    return { setPaymentMethod, setAddressData, getPaymentMethod, getAddressData }; 
+    return { 
+        setData,
+        getData,
+    }; 
 });

@@ -26,6 +26,48 @@ function validatePassword(password) {
     }
 }
 
+function validatePhone(phone) {
+    if (phone.length == 9) {
+        return true;
+    }
+
+    return "Niepoprawny numer telefonu";
+}
+
+function validateCity(city) {
+    if (city.length > 0) {
+        return true;
+    }
+
+    return "Podaj miasto";
+}
+
+function validateHouseNumber(house_number) {
+    if (house_number.length > 0) {
+        return true;
+    }
+
+    return "Podaj numer domu";
+}
+
+function validateZipCode(zipCode) {
+    const regex = /^[0-9]{2}-[0-9]{3}$/;
+
+    if (regex.test(zipCode)) {
+        return true;
+    }
+
+    return "Podano błędny kod pocztowy";
+}
+
+function validateNip(nip) {
+    if (nip.length > 0) {
+        return true;
+    }
+
+    return "Proszę podać nip";
+}
+
 function isLongEnough(password) {
     return password.length >= 8 && password.length <= 30;
 }
@@ -48,4 +90,4 @@ function hasSpecialCharacter(password) {
     return regex.test(password);
 }
 
-export { validateEmail, validateName, validatePassword };
+export { validateEmail, validateName, validatePassword, validatePhone, validateHouseNumber, validateZipCode, validateCity, validateNip };
