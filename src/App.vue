@@ -11,8 +11,10 @@ import Navbar from './components/Navbar.vue';
 import FooterComp from './components/FooterComp.vue';
 import { inject, reactive } from 'vue';
 import { usePaintingsStore } from './stores/paintings';
+import { useUserDataStore } from './stores/userdata';
 
-const paintings = usePaintingsStore;
+const userData = useUserDataStore();
+const paintings = usePaintingsStore();
 
 const eventBus = inject('$eventBus');
 </script>

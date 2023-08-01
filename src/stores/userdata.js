@@ -14,11 +14,12 @@ const userData = reactive({
 });
 
 const id = ref(checkID());
-let dataRetrieved = false;
 const bearerToken = ref(localStorage.getItem(bearerTokenKey));
 
-checkBearerToken();
-fetchData();
+let dataRetrieved = false;
+
+await checkBearerToken();
+await fetchData();
 
 async function fetchData() {
     if (bearerToken.value != "null") {
@@ -37,6 +38,7 @@ async function checkBearerToken() {
 
     if (currentToken == "null" || currentID == "null") {
         clearData();
+        return false;
     }
 
     const isLoggedIn = await isTokenLoggedIn(currentToken)
@@ -45,7 +47,7 @@ async function checkBearerToken() {
         clearData();
     }
 
-    return currentToken;
+    return true;
 }
 
 async function isTokenLoggedIn(token) {
@@ -89,7 +91,6 @@ function setOrders(ordersObject) {
 }
 
 export const useUserDataStore = defineStore('user-data', () => {
-
     async function logIn(email, password) {
 
         try {
@@ -145,7 +146,15 @@ export const useUserDataStore = defineStore('user-data', () => {
 
     const getID = computed(() => id.value);
     const getData = computed(() => userData);
-    const isLoggedIn = computed(() => (bearerToken.value == "null") ? false : true );
+
+    const isLoggedIn = computed(() => {
+        if (bearerToken.value == "null") {
+            return false;
+        }
+        else {
+            return true;
+        }
+    });
 
     return { 
         getID,

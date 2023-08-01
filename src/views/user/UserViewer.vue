@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { inject, reactive, computed } from 'vue';
+import { inject, reactive, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
@@ -22,13 +22,15 @@ const eventBus = inject('$eventBus');
 const userData = useUserDataStore();
 const router = useRouter();
 
-const data = computed(() => userData.getData)
-
 const { userId } = defineProps(['userId']);
 
-if (userData.getID == null) {
+const data = computed(() => userData.getData)
+const isLoggedIn = computed(() => userData.isLoggedIn);
+
+if (!isLoggedIn.value) {
     router.push('/');
 }
+
 
 async function logOut() {
     const loggedOut = await userData.logOut();
@@ -46,4 +48,6 @@ async function deleteProfile() {
         router.push('/');
     }
 }
+
+
 </script>

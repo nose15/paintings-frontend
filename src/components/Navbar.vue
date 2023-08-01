@@ -35,6 +35,8 @@ const data = reactive({
   isLoggedIn: userData.isLoggedIn,
 })
 
+update();
+
 eventBus.$on('userLoggedIn', () => {
   update();
 });
