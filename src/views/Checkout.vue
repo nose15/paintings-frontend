@@ -9,7 +9,7 @@
                         <label for="email">Adres email</label>
                         <input id="email" v-model="data.credentials.email">
                         <label for="phone">Numer telefonu</label>
-                        <input id="phone" v-model="data.credentials.phone">
+                        <input id="phone" v-model="data.credentials.phone" v-maska data-maska="#########">
                     </div>
                     <label for="is_company">Kupuję jako</label>
                     <div id="is_company">
@@ -22,7 +22,7 @@
                         <label for="companyName">Nazwa firmy</label>
                         <input id="companyName" v-model="data.companyInfo.company_name">
                         <label for="NIPnumber">Nr NIP</label>
-                        <input id="NIPnumber" v-model="data.companyInfo.NIP_number">
+                        <input id="NIPnumber" v-model="data.companyInfo.NIP_number" v-maska data-maska="##########">
                     </div>
                     <div>
                         <label for="deliveryMethod">Sposób dostarczenia</label>
@@ -41,7 +41,7 @@
                                 <label for="flatNumberInput">Numer Lokalu</label>
                                 <input id="flatNumberInput" v-model="data.address.flat_number">
                                 <label for="zipCodeInput">Kod pocztowy</label>
-                                <input id="zipCodeInput" v-model="data.address.postal_code">
+                                <input id="zipCodeInput" v-model="data.address.postal_code" v-maska data-maska="##-###">
                                 <label for="cityInput">Miasto</label>
                                 <input id="cityInput" v-model="data.address.city">
                             </div>
@@ -105,10 +105,11 @@
 
 <script setup>
 import { reactive, ref, inject, computed } from 'vue';
-import { validateEmail, validateName, validatePhone, validateHouseNumber, validateCity, validateZipCode, validateNip } from './utils';
+import { validateEmail, validateName, validateHouseNumber, validateCity, validateZipCode, validateNip, validatePhoneNumber } from './utils';
 import { useCartStore } from '../stores/shopping_cart';
 import { useUserDataStore } from '../stores/userdata';
 import { useCheckoutStore } from '../stores/checkout';
+import { vMaska } from "maska"
 
 import { useRouter } from 'vue-router'
 
@@ -148,7 +149,7 @@ function credsValid() {
 
     const nameValid = validateName(data.credentials.name);
     const emailValid = validateEmail(data.credentials.email);
-    const phoneValid = validatePhone(data.credentials.phone);
+    const phoneValid = validatePhoneNumber(data.credentials.phone);
 
     if (nameValid != true) {
         errors.credentials.name = nameValid;

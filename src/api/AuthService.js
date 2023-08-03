@@ -18,19 +18,18 @@ async function logoutAsync(token) {
     }
 
     try {
-        const response = ApiWrapper.post('logout', requestHeaders, {});
-        return true;
+        const response = await ApiWrapper.post('logout', requestHeaders, null);
+        return response;
     }
     catch(error) {
-        console.error(error);
-        return false;
+        throw new AuthError(error.statusCode, error.message);
     }
 }
 
 async function registerAsync(data) {
     try {
         const response = await ApiWrapper.post('register', {}, data);
-        return true;
+        return response;
     }
     catch(error) {
         throw new AuthError(error.statusCode, error.message);

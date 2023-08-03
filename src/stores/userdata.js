@@ -124,8 +124,14 @@ export const useUserDataStore = defineStore('user-data', () => {
 
     async function register(data) {
         try {
-            const registered = await AuthService.registerAsync(data);
-            return registered;
+            const response = await AuthService.registerAsync(data);
+            setToken(response.token);
+            setID(response.user.id);
+            setData(response.user);
+
+            const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
+            setOrders(orders);
+            return true;
         }
         catch (error) {
             return error.statusCode;

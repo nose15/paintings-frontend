@@ -17,8 +17,9 @@ async function request(url="", method, headers, data=null) {
         ...config.headers,
         ...headers
     }
+
     const requestUrl = config.baseURL + url
-    const response = await fetch(requestUrl, {
+    const requestData = {
         method: method,
         mode: "cors", 
         cache: "no-cache", 
@@ -26,11 +27,17 @@ async function request(url="", method, headers, data=null) {
         headers: requestHeaders,
         redirect: "follow",
         referrerPolicy: "no-referrer", 
-        body: data != null ? JSON.stringify(data) : null
-    });
+    };
+
+    if (data != null) {
+        requestData.body = JSON.stringify(data);
+    }
+
+    const response = await fetch(requestUrl, requestData);
 
     if (response.ok) {
-        return await response.json();
+        const responseJson = await response.json();
+        return responseJson;
     }
     else {
         throw new ApiError(response.status, response.statusText);

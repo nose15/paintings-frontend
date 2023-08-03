@@ -101,17 +101,12 @@ async function onButtonClicked() {
 
     const registered = await register();
 
-    if (!registered) {
+    if (registered == true) {
+      navigate();
       return;
     }
 
-    const loggedIn = await logIn();
-
-    if (!loggedIn) {
-      return;
-    }
-
-    navigate();
+    return;
 }
 
 function clearErrors() {
@@ -144,13 +139,13 @@ async function register() {
 
   const response = await userDataStore.register(registerData);
 
-  if (response != true) {
-    const errorCode = response;
-    assignErrors(errorCode);
-    return false;
+  if (response == true) {
+    eventBus.$emit('userLoggedIn');
+    return true;
   }
 
-  return true;
+  assignErrors(errorCode);
+  return false;
 }
 
 async function logIn() {

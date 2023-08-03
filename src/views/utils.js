@@ -26,8 +26,8 @@ function validatePassword(password) {
     }
 }
 
-function validatePhone(phone) {
-    if (phone.length == 9) {
+function validatePhoneNumber(phoneNumber) {
+    if (phoneNumber.length == 9) {
         return true;
     }
 
@@ -61,11 +61,14 @@ function validateZipCode(zipCode) {
 }
 
 function validateNip(nip) {
-    if (nip.length > 0) {
+    if (nip.length == 10) {
         return true;
     }
+    if (nip.length == 0) {
+        return "Proszę podać nip";
+    }
 
-    return "Proszę podać nip";
+    return "Błędny nip"
 }
 
 function isLongEnough(password) {
@@ -90,4 +93,4 @@ function hasSpecialCharacter(password) {
     return regex.test(password);
 }
 
-export { validateEmail, validateName, validatePassword, validatePhone, validateHouseNumber, validateZipCode, validateCity, validateNip };
+export { validateEmail, validateName, validatePassword, validatePhoneNumber, validateHouseNumber, validateZipCode, validateCity, validateNip };
