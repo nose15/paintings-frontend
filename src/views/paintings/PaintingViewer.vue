@@ -38,7 +38,7 @@ const cart = useCartStore();
 const { id } = defineProps(['id']);
 const painting = paintings.getPaintingByID(id);
 
-const cartError = ref("");
+const cartError = ref(""); 
 
 async function sleep(seconds) {
     await new Promise(r => setTimeout(r, seconds * 1000));

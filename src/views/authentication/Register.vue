@@ -144,18 +144,7 @@ async function register() {
     return true;
   }
 
-  assignErrors(errorCode);
-  return false;
-}
-
-async function logIn() {
-  const loggedIn = await userDataStore.logIn(data.email, data.password);
-
-  if (loggedIn) {
-    eventBus.$emit('userLoggedIn');
-    return true;
-  }
-
+  assignErrors(response);
   return false;
 }
 

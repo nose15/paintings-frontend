@@ -70,7 +70,6 @@ export const useCartStore = defineStore('cart-store', () => {
     });
 
     const getCartItemIds = computed(() => {
-        console.log(cartData.itemIDs);
         return cartData.itemIDs;
     })
 

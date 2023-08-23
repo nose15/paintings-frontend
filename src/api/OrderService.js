@@ -41,8 +41,6 @@ async function createOrderAsync(orderData) {
         extraInfo: orderData.extraInfo
     }
 
-    console.log(body);
-
     try {
         const response = ApiWrapper.post('orders', {}, body);
         return response;
