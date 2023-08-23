@@ -31,7 +31,6 @@ if (!isLoggedIn.value) {
     router.push('/');
 }
 
-
 async function logOut() {
     const loggedOut = await userData.logOut();
     if (loggedOut) {
