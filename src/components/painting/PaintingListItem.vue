@@ -18,7 +18,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const { painting } = defineProps(['painting']);
 const getImageURL = () => {
-    return new URL(`../../assets/img/obraz1.jpg`, import.meta.url).href;
+    return new URL(`/http://localhost:8000/storage/images/${painting.image}.jpg`, import.meta.url).href;
 };
 
 function goToPaintingView() {

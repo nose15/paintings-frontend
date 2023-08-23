@@ -14,8 +14,9 @@ const userData = reactive({
 });
 
 const id = ref(checkID());
-let dataRetrieved = false;
 const bearerToken = ref(localStorage.getItem(bearerTokenKey));
+
+let dataRetrieved = false;
 
 await checkBearerToken();
 await fetchData();
@@ -37,6 +38,7 @@ async function checkBearerToken() {
 
     if (currentToken == "null" || currentID == "null") {
         clearData();
+        return false;
     }
 
     const isLoggedIn = await isTokenLoggedIn(currentToken)
@@ -45,7 +47,7 @@ async function checkBearerToken() {
         clearData();
     }
 
-    return currentToken;
+    return true;
 }
 
 async function isTokenLoggedIn(token) {
@@ -89,11 +91,10 @@ function setOrders(ordersObject) {
 }
 
 export const useUserDataStore = defineStore('user-data', () => {
-
     async function logIn(email, password) {
-        const response = await AuthService.loginAsync({email: email, password: password});
 
-        if (response != null) {
+        try {
+            const response = await AuthService.loginAsync({email: email, password: password});
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
@@ -101,9 +102,9 @@ export const useUserDataStore = defineStore('user-data', () => {
             const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
             setOrders(orders);
             return true;
-        }
-        else {
-            return false;
+        } 
+        catch (error) {
+            return error.statusCode;
         }
     }
     
@@ -122,8 +123,19 @@ export const useUserDataStore = defineStore('user-data', () => {
     }
 
     async function register(data) {
-        const registered = await AuthService.registerAsync(data);
-        return registered;
+        try {
+            const response = await AuthService.registerAsync(data);
+            setToken(response.token);
+            setID(response.user.id);
+            setData(response.user);
+
+            const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
+            setOrders(orders);
+            return true;
+        }
+        catch (error) {
+            return error.statusCode;
+        }
     }
 
     async function deleteProfile() {
@@ -140,7 +152,15 @@ export const useUserDataStore = defineStore('user-data', () => {
 
     const getID = computed(() => id.value);
     const getData = computed(() => userData);
-    const isLoggedIn = computed(() => (bearerToken.value == "null") ? false : true );
+
+    const isLoggedIn = computed(() => {
+        if (bearerToken.value == "null") {
+            return false;
+        }
+        else {
+            return true;
+        }
+    });
 
     return { 
         getID,

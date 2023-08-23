@@ -1,39 +1,89 @@
 import { defineStore } from "pinia";
-import { reactive, ref, computed } from "vue";
+import { reactive, computed, watch, toRaw } from "vue";
+import { OrderService } from "../api/OrderService";
+import { useUserDataStore } from "./userdata";
+import { useCartStore } from "./shopping_cart";
 
-const addressData = reactive({
-    city: "",
-    postal_code: "",
-    street: "",
-    house_number: "",
-    flat_number: "",
-
-    is_company: false,
-    company_name: "",
-    NIP_number: "",
+const data = reactive({
+    credentials: {
+        name: "",
+        email: "",
+        phone: "",
+    },
+    userId: null,
+    paymentMethod: "",
+    deliveryMethod: "",
+    address: {
+        city: "",
+        postal_code: "",
+        address: ""
+    },
+    companyInfo: {
+        isCompany: false,
+        company_name: "",
+        NIP_number: "",
+    },
     extra_info: "",
+    product_ids: []
 });
 
-const paymentMethod = ref("");
-
 export const useCheckoutStore = defineStore('checkout-store', () => {
-    function setAddressData(newData) {
-        for (const [key, value] of Object.entries(newData)) {
-            addressData[key] = value;
-        };
+    
+
+    function setData(newData) {
+        for (const key in data) {
+            data[key] = newData[key];
+        }
     }
 
-    function setPaymentMethod(newPaymentMethod) {
-        paymentMethod.value = newPaymentMethod;
+    async function createOrder(items) {
+        data.product_ids = items
+        const response = await OrderService.createOrderAsync(data);
+        console.log(response);
     }
 
-    const getAddressData = computed(() => {
-        return addressData;
+    const getCredentials = computed(() => {
+        return data.credentials;
+    });
+
+    const getUserId = computed(() => {
+        return data.userId;
+    });
+
+    const getExtraInfo = computed(() => {
+        return data.extra_info;
+    });
+
+    const getDeliveryMethod = computed(() => {
+        return data.deliveryMethod;
     });
 
     const getPaymentMethod = computed(() => {
-        return paymentMethod.value;
-    })
+        return data.paymentMethod;
+    });
 
-    return { setPaymentMethod, setAddressData, getPaymentMethod, getAddressData }; 
+    const getAddress = computed(() => {
+        return data.address;
+    });
+
+    const getCompanyInfo = computed(() => {
+        return data.companyInfo;
+    });
+
+    const getData = computed(() => {
+        return data;
+    });
+
+    return { 
+        setData,
+        createOrder,
+        getCredentials,
+        getUserId,
+        getDeliveryMethod,
+        getPaymentMethod,
+        getAddress,
+        getExtraInfo,
+        getCompanyInfo,
+        getData
+    }; 
 });

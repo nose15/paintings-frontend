@@ -1,25 +1,8 @@
 import { defineStore } from "pinia";
+import { ApiService } from "../api/ApiService";
 import { ref } from 'vue';
 
-const paintings = await retrievePaintings();
-
-async function retrievePaintings() {
-    // here will be logic that allows retrieving data from DB, for now we just prepare mock data here   
-    const response = await fetch('http://localhost:8000/api/products', {
-        method: "GET",
-        mode: "cors", 
-        cache: "no-cache", 
-        credentials: "omit",
-        headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8000"
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer", 
-    });
-    const data = await response.json();
-
-    return data.data;
-}
+const paintings = await ApiService.retrievePaintingsAsync();
 
 export const usePaintingsStore = defineStore('paintings', () => {
     function getAllPaintings() {

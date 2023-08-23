@@ -37,6 +37,8 @@ const data = reactive({
 
 update();
 
+update();
+
 eventBus.$on('userLoggedIn', () => {
   update();
 });
