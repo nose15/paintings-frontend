@@ -69,6 +69,11 @@ export const useCartStore = defineStore('cart-store', () => {
         return cartData.items;
     });
 
+    const getCartItemIds = computed(() => {
+        console.log(cartData.itemIDs);
+        return cartData.itemIDs;
+    })
+
     const getTotalPrice = computed(() => {
         let total = 0;
 
@@ -95,5 +100,5 @@ export const useCartStore = defineStore('cart-store', () => {
         
     }
 
-    return { addToCart, removeFromCart, getCartItems, getTotalPrice }
+    return { addToCart, removeFromCart, getCartItems, getTotalPrice, getCartItemIds }
 });

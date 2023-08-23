@@ -6,7 +6,7 @@ function validateEmail(email) {
         }
         return "Niepoprawny adres email";
     }
-    return "";
+    return "Podaj adres email";
 }
 
 function validateName(name) {
@@ -42,12 +42,12 @@ function validateCity(city) {
     return "Podaj miasto";
 }
 
-function validateHouseNumber(house_number) {
-    if (house_number.length > 0) {
+function validateAddress(address) {
+    if (address.length > 0) {
         return true;
     }
 
-    return "Podaj numer domu";
+    return "Podaj adres";
 }
 
 function validateZipCode(zipCode) {
@@ -93,4 +93,4 @@ function hasSpecialCharacter(password) {
     return regex.test(password);
 }
 
-export { validateEmail, validateName, validatePassword, validatePhoneNumber, validateHouseNumber, validateZipCode, validateCity, validateNip };
+export { validateEmail, validateName, validatePassword, validatePhoneNumber, validateAddress, validateZipCode, validateCity, validateNip };

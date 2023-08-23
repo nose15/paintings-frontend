@@ -6,23 +6,28 @@
                     <div class="row">
                         <label for="name">Imię i nazwisko</label>
                         <input id="name" v-model="data.credentials.name">
+                        <div class="form-text text-danger">{{ errors.credentials.name }}</div>
                         <label for="email">Adres email</label>
                         <input id="email" v-model="data.credentials.email">
+                        <div class="form-text text-danger">{{ errors.credentials.email }}</div>
                         <label for="phone">Numer telefonu</label>
                         <input id="phone" v-model="data.credentials.phone" v-maska data-maska="#########">
+                        <div class="form-text text-danger">{{ errors.credentials.phone }}</div>
                     </div>
                     <label for="is_company">Kupuję jako</label>
                     <div id="is_company">
                         <label for="os_prywatna">Os. prywatna</label>
-                        <input id="os_prywatna" type="radio" name="is_company" @click="data.isCompany=false">
+                        <input id="os_prywatna" type="radio" name="is_company" :checked="!data.isCompany" @click="data.isCompany=false">
                         <label for="firma">Firma</label>
-                        <input id="firma" type="radio" name="is_company" @click="data.isCompany=true">
+                        <input id="firma" type="radio" name="is_company" :checked="data.isCompany" @click="data.isCompany=true">
                     </div>
                     <div class="row" v-if="data.isCompany">
                         <label for="companyName">Nazwa firmy</label>
                         <input id="companyName" v-model="data.companyInfo.company_name">
+                        <div class="form-text text-danger">{{ errors.company.name }}</div>
                         <label for="NIPnumber">Nr NIP</label>
                         <input id="NIPnumber" v-model="data.companyInfo.NIP_number" v-maska data-maska="##########">
+                        <div class="form-text text-danger">{{ errors.company.nip }}</div>
                     </div>
                     <div>
                         <label for="deliveryMethod">Sposób dostarczenia</label>
@@ -31,19 +36,19 @@
                             <input id="spedition" type="radio" name="delMethod" @click="data.deliveryMethod='spedition'">
                             <label for="pickup">Odbiór Osobity</label>
                             <input id="pickup" type="radio" name="delMethod" @click="data.deliveryMethod='pickup'">
+                            <div class="form-text text-danger">{{ errors.delivery }}</div>
                         </div>
                         <div v-if="data.deliveryMethod=='spedition'">
                             <div class="row">
-                                <label for="streetInput">Ulica</label>
-                                <input id="streetInput" v-model="data.address.street">
-                                <label for="houseNumberInput">Numer budynku</label>
-                                <input id="houseNumberInput" v-model="data.address.house_number">
-                                <label for="flatNumberInput">Numer Lokalu</label>
-                                <input id="flatNumberInput" v-model="data.address.flat_number">
-                                <label for="zipCodeInput">Kod pocztowy</label>
-                                <input id="zipCodeInput" v-model="data.address.postal_code" v-maska data-maska="##-###">
+                                <label for="streetInput">Adres</label>
+                                <input id="streetInput" v-model="data.address.address">
+                                <div class="form-text text-danger">{{ errors.address.address }}</div>
                                 <label for="cityInput">Miasto</label>
                                 <input id="cityInput" v-model="data.address.city">
+                                <div class="form-text text-danger">{{ errors.address.city }}</div>
+                                <label for="zipCodeInput">Kod pocztowy</label>
+                                <input id="zipCodeInput" v-model="data.address.postal_code" v-maska data-maska="##-###">
+                                <div class="form-text text-danger">{{ errors.address.postalCode }}</div>
                             </div>
                         </div>
                         <div v-if="data.deliveryMethod=='pickup'">
@@ -85,10 +90,12 @@
                         <label for="paypal">Paypal</label>
                     </div>
                 </form>
+                <div class="form-text text-danger">{{ errors.payment }}</div>
+                <div></div>
             </div>
             <div class="row">
                 <div>
-                    <p class="fs-3">Razem {{ totalPrice }}</p>
+                    <p class="fs-3">Razem <strong>{{ totalPrice }} zł</strong></p>
                     <div v-if="!loggedIn">
                         <button class="btn btn-success" @click.prevent="loginCheckout()">Zaloguj się</button>
                         <button class="btn btn-info" @click.prevent="summary()">Kup jako gość</button>
@@ -104,8 +111,8 @@
 </template>
 
 <script setup>
-import { reactive, ref, inject, computed } from 'vue';
-import { validateEmail, validateName, validateHouseNumber, validateCity, validateZipCode, validateNip, validatePhoneNumber } from './utils';
+import { reactive, ref, inject, computed, watch } from 'vue';
+import { validateEmail, validateName, validateAddress, validateCity, validateZipCode, validateNip, validatePhoneNumber } from './utils';
 import { useCartStore } from '../stores/shopping_cart';
 import { useUserDataStore } from '../stores/userdata';
 import { useCheckoutStore } from '../stores/checkout';
@@ -124,7 +131,28 @@ const totalPrice = cartStore.getTotalPrice;
 
 const loggedIn = userStore.isLoggedIn;
 
-const data = checkoutStore.getData;
+const data = reactive({
+    credentials: {
+        name: "",
+        email: "",
+        phone: "",
+    },
+    userId: null,
+    paymentMethod: "",
+    deliveryMethod: "",
+    address: {
+        city: "",
+        postal_code: "",
+        address: ""
+    },
+    companyInfo: {
+        isCompany: false,
+        company_name: "",
+        NIP_number: "",
+    },
+    extra_info: ""
+});
+
 const errors = reactive({
     credentials: {
         name: "",
@@ -132,8 +160,8 @@ const errors = reactive({
         phone: "",
     },
     address: {
-        house_number: "",
-        postal_code: "",
+        address: "",
+        postalCode: "",
         city: "",
     },
     company: {
@@ -142,6 +170,10 @@ const errors = reactive({
     },
     delivery: "",
     payment: "",
+});
+
+watch(data, (oldData, newData) => {
+    clearErrors();
 });
 
 function credsValid() {
@@ -172,18 +204,18 @@ function credsValid() {
 function addressValid() {
     var valid = true;
 
-    if (data.deliveryMethod == 'spedition') {    
-        const houseNumberValid = validateHouseNumber(data.address.house_number);
+    if (data.deliveryMethod == 'spedition') {
+        const addrValid = validateAddress(data.address.address);
         const postalCodeValid = validateZipCode(data.address.postal_code);
         const cityValid = validateCity(data.address.city);
 
-        if (houseNumberValid != true) {
-            errors.address.house_number = houseNumberValid;
+        if (addrValid != true) {
+            errors.address.address = addrValid;
             valid = false;
         }
 
         if (postalCodeValid != true) {
-            errors.address.postal_code = postalCodeValid;
+            errors.address.postalCode = postalCodeValid;
             valid = false;
         }
 
@@ -254,17 +286,57 @@ async function summary() {
     if (formValid) {
         checkoutStore.setData(data);
         router.push('/podsumowanie');
+        return;
+    }
+}
+
+function clearErrors() {
+    errors.credentials = {
+        name: "",
+        email: "",
+        phone: "",
     }
 
-    console.log(errors);
+    errors.address = {
+        address: "",
+        postalCode: "",
+        city: "",
+    }
+
+    errors.company = {
+        name: "",
+        nip: "",
+    }
+
+    errors.delivery = ""
+
+    errors.payment = ""
 }
 
 function validate() {
-    if (credsValid() && addressValid() && companyValid() && deliveryValid() && paymentValid()){
-        return true;
+    var valid = true;
+
+    if (!credsValid()){
+        valid = false;
     }
 
-    return false;
+    if (!addressValid()) {
+        valid = false;
+    }
+
+    if (!companyValid()) {
+        valid = false;
+    }
+
+    if (!deliveryValid()) {
+        valid = false;
+    }
+
+    if (!paymentValid()) {
+        valid = false;
+    }
+
+    return valid;
 }
 
 </script>
