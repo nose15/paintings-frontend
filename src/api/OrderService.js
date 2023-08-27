@@ -42,14 +42,30 @@ async function createOrderAsync(orderData) {
     }
 
     try {
-        const response = ApiWrapper.post('orders', {}, body);
+        const response = await ApiWrapper.post('orders', {}, body);
         return response;
     } catch (error) {
         console.error(error)
     }
 }
 
+async function retrieveOrdersAsync(user_id, token) {
+    const url = `orders/tracking/${user_id}`;
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+    };
+
+    try {
+        const response = await ApiWrapper.get(url, headers);
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 export const OrderService = {
-    createOrderAsync
+    createOrderAsync,
+    retrieveOrdersAsync
 }

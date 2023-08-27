@@ -8,23 +8,33 @@
         <p>{{ data.email }}</p>
         <p>{{ data.phone }}</p>
     </div>
-    <user-order-list v-if="data.orders.length > 0" :orders="data.orders"></user-order-list>
+    <user-order-list v-if="data.orders && data.orders.data.length > 0" :key="data.orders.data" :orders="data.orders.data"></user-order-list>
 </template>
 
 <script setup>
-import { inject, reactive, computed, watch } from 'vue';
+import { inject, reactive, computed, watch, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserDataStore } from '../../stores/userdata';
 import { useRouter } from 'vue-router';
+import { useOrderStore } from '../../stores/order_store';
 import UserOrderList from '../../components/user/UserOrdersList.vue'
 
 const eventBus = inject('$eventBus');
 const userData = useUserDataStore();
+const orderStore = useOrderStore();
 const router = useRouter();
 
 const { userId } = defineProps(['userId']);
 
-const data = computed(() => userData.getData)
+const data = computed(() => {
+    const dataObject = {
+        ...userData.getData,
+        orders: toRaw(orderStore.getOrders),
+    }
+
+    return dataObject;
+});
+
 const isLoggedIn = computed(() => userData.isLoggedIn);
 
 if (!isLoggedIn.value) {

@@ -11,7 +11,7 @@
                 <p>{{ painting.description }}</p>
             </div>
             <div class="col">
-                <p><span class="d-flex justify-content-center fs-1">{{ painting.price }} zł</span></p>
+                <p><span class="d-flex justify-content-center fs-1">{{ painting.base_price }} zł</span></p>
                 <div class="container">
                     <div class="row m-3 justify-content-center">
                         <a @click.prevent="" role="button" class="col-6 btn btn-warning">Kup teraz</a>

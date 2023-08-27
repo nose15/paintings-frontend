@@ -9,6 +9,7 @@ import User from '../views/user/User.vue';
 import UserEdit from '../views/user/UserEdit.vue';
 import UserViewer from '../views/user/UserViewer.vue';
 
+import Orders from '../views/order/Orders.vue';
 import OrderViewer from '../views/order/OrderViewer.vue';
 import OrderCancel from '../views/order/OrderCancel.vue';
 
@@ -62,15 +63,20 @@ const router = createRouter({
             ],
         },
         {
-            path: `/zamowienie${propsIndicator}:orderId`,
+            path: `/zamowienia`,
             children: [
                 {
                     path: '',
+                    component: Orders,
+                    props: true
+                },
+                {
+                    path: `:orderId`,
                     component: OrderViewer,
                     props: true
                 },
                 {
-                    path: 'odwolaj',
+                    path: `:orderId/odwolaj`,
                     component: OrderCancel,
                     props: true
                 }

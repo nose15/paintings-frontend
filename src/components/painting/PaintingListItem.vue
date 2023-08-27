@@ -5,6 +5,7 @@
                 <div class="card-img-overlay children-card col-6">
                     <h5 class="card-title">{{ painting.name }}</h5>
                     <div class="card-text description-text mb-3" style="">{{ painting.description }}</div>
+                    <p>{{ painting.base_price }} zł</p>
                     <a @click="goToPaintingView()" role="button" class="btn btn-primary" type="button">Więcej...</a>
                 </div>
             </div>

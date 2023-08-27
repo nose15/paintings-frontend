@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { AuthService } from '../api/AuthService.js';
 import { UserService } from "../api/UserService.js";
+import { useOrderStore } from "./order_store.js";
 import { computed, reactive, ref } from "vue";
+import { OrderService } from "../api/OrderService.js";
 
 const bearerTokenKey = "token"
 const IDKey = "user_id";
@@ -10,7 +12,6 @@ const userData = reactive({
     name: "",
     email: "",
     phone: "",
-    orders: [],
 });
 
 const id = ref(checkID());
@@ -25,8 +26,6 @@ async function fetchData() {
     if (bearerToken.value != "null") {
         if (!dataRetrieved) {
             const responseData = await UserService.fetchDataAsync(bearerToken.value, id.value);
-            const responseOrders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
-            setOrders(responseOrders);
             setData(responseData.data);
         }
     }
@@ -86,9 +85,6 @@ function clearData() {
     dataRetrieved = false;
 }
 
-function setOrders(ordersObject) {
-    userData.orders = ordersObject;
-}
 
 export const useUserDataStore = defineStore('user-data', () => {
     async function logIn(email, password) {
@@ -98,9 +94,6 @@ export const useUserDataStore = defineStore('user-data', () => {
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
-
-            const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
-            setOrders(orders);
             return true;
         } 
         catch (error) {
@@ -129,8 +122,6 @@ export const useUserDataStore = defineStore('user-data', () => {
             setID(response.user.id);
             setData(response.user);
 
-            const orders = await UserService.fetchOrdersAsync(bearerToken.value, id.value);
-            setOrders(orders);
             return true;
         }
         catch (error) {
@@ -152,6 +143,7 @@ export const useUserDataStore = defineStore('user-data', () => {
 
     const getID = computed(() => id.value);
     const getData = computed(() => userData);
+    const getToken = computed(() => bearerToken.value);
 
     const isLoggedIn = computed(() => {
         if (bearerToken.value == "null") {
@@ -166,6 +158,7 @@ export const useUserDataStore = defineStore('user-data', () => {
         getID,
         isLoggedIn,
         getData,
+        getToken,
         logIn, 
         logOut, 
         register,
