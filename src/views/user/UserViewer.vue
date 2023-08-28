@@ -8,7 +8,7 @@
         <p>{{ data.email }}</p>
         <p>{{ data.phone }}</p>
     </div>
-    <user-order-list v-if="data.orders && data.orders.data.length > 0" :key="data.orders.data" :orders="data.orders.data"></user-order-list>
+    <user-order-list v-if="data.orders != undefined && data.orders.data.length > 0" :key="data.orders.data" :orders="data.orders.data"></user-order-list>
 </template>
 
 <script setup>

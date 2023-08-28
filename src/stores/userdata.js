@@ -19,18 +19,6 @@ const bearerToken = ref(localStorage.getItem(bearerTokenKey));
 
 let dataRetrieved = false;
 
-await checkBearerToken();
-await fetchData();
-
-async function fetchData() {
-    if (bearerToken.value != "null") {
-        if (!dataRetrieved) {
-            const responseData = await UserService.fetchDataAsync(bearerToken.value, id.value);
-            setData(responseData.data);
-        }
-    }
-}
-
 async function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
     let currentID = localStorage.getItem(IDKey);
@@ -87,6 +75,8 @@ function clearData() {
 
 
 export const useUserDataStore = defineStore('user-data', () => {
+    const orderStore = useOrderStore();
+
     async function logIn(email, password) {
 
         try {
@@ -94,6 +84,7 @@ export const useUserDataStore = defineStore('user-data', () => {
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
+            await orderStore.retrieveOrders(response.user.id, response.token);
             return true;
         } 
         catch (error) {
@@ -121,7 +112,7 @@ export const useUserDataStore = defineStore('user-data', () => {
             setToken(response.token);
             setID(response.user.id);
             setData(response.user);
-
+            await orderStore.retrieveOrders(response.user.id, response.token);
             return true;
         }
         catch (error) {
@@ -153,6 +144,19 @@ export const useUserDataStore = defineStore('user-data', () => {
             return true;
         }
     });
+
+    async function fetchData() {
+        if (bearerToken.value != "null") {
+            if (!dataRetrieved) {
+                const responseData = await UserService.fetchDataAsync(bearerToken.value, id.value);
+                orderStore.retrieveOrders(id.value, bearerToken.value);
+                setData(responseData.data);
+            }
+        }
+    }
+
+    checkBearerToken();
+    fetchData();
 
     return { 
         getID,

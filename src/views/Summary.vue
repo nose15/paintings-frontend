@@ -75,8 +75,8 @@ const paymentData = reactive({
 });
 
 async function orderRequest() {
-    await checkoutStore.createOrder(toRaw(cartStore.getCartItemIds));
-
+    const order = await checkoutStore.createOrder(toRaw(cartStore.getCartItemIds));
+    console.log(order.clientSecret);
     paymentData.orderCreated = true;
 }
 

@@ -39,6 +39,7 @@ export const useCheckoutStore = defineStore('checkout-store', () => {
     async function createOrder(items) {
         data.product_ids = items
         const response = await OrderService.createOrderAsync(data);
+        return response;
     }
 
     const getCredentials = computed(() => {

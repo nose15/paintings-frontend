@@ -1,4 +1,5 @@
 import { ApiWrapper } from "./ApiWrapper";
+import { OrderError } from "./utils/OrderError.js";
 import { toRaw } from "vue";
 
 async function createOrderAsync(orderData) {
@@ -45,7 +46,7 @@ async function createOrderAsync(orderData) {
         const response = await ApiWrapper.post('orders', {}, body);
         return response;
     } catch (error) {
-        console.error(error)
+        throw new OrderError(error.statusCode, error.message);
     }
 }
 
@@ -60,7 +61,7 @@ async function retrieveOrdersAsync(user_id, token) {
         const response = await ApiWrapper.get(url, headers);
         return response;
     } catch (error) {
-        console.error(error);
+        throw new OrderError(error.statusCode, error.message);
     }
 }
 
