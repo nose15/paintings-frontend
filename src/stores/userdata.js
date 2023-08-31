@@ -19,6 +19,8 @@ const bearerToken = ref(localStorage.getItem(bearerTokenKey));
 
 let dataRetrieved = false;
 
+await checkBearerToken();
+
 async function checkBearerToken() {
     let currentToken = localStorage.getItem(bearerTokenKey);
     let currentID = localStorage.getItem(IDKey);
@@ -155,7 +157,6 @@ export const useUserDataStore = defineStore('user-data', () => {
         }
     }
 
-    checkBearerToken();
     fetchData();
 
     return { 

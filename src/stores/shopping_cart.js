@@ -3,11 +3,20 @@ import { computed, reactive, ref, setBlockTracking } from "vue";
 import utils from "./utils.js"
 import Cookies from "js-cookie";
 import { usePaintingsStore } from './paintings.js';
+import { PaymentService } from "../api/PaymentService.js";
 
 const config = {
     cartCookieName: "cartItems",
     cartCookieExpirationDays: 1
 }
+
+const clientSecret = ref();
+
+const prevCartData = reactive({
+    total: 0,
+    itemIDs: [],
+    items: [],
+});
 
 const cartData = reactive({
     total: 0,
@@ -77,7 +86,7 @@ export const useCartStore = defineStore('cart-store', () => {
         let total = 0;
 
         cartData.items.forEach((item) => {
-            total += item.price;
+            total += item.base_price;
         });
 
         return total.toFixed(2);
@@ -99,5 +108,36 @@ export const useCartStore = defineStore('cart-store', () => {
         
     }
 
-    return { addToCart, removeFromCart, getCartItems, getTotalPrice, getCartItemIds }
+    async function setPaymentIntent() {
+        if (cartData == prevCartData) {
+            return true;
+        }
+
+        //prevCartData = cartData;
+        var newClientSecret = undefined;
+
+        try {
+            if (clientSecret.value != null) {
+                newClientSecret = await PaymentService.updatePaymentIntent(clientSecret, cartData);
+            }
+            else {
+                newClientSecret = await PaymentService.createPaymentIntent(cartData);
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+
+        if (newClientSecret != undefined) {
+            return newClientSecret;
+        }
+
+        return clientSecret.value;
+    }
+
+    const getClientSecret = computed(() => {
+        return clientSecret.value;
+    });
+
+    return { addToCart, removeFromCart, getCartItems, getTotalPrice, getCartItemIds, setPaymentIntent, getClientSecret }
 });

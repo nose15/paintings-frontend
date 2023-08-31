@@ -39,7 +39,7 @@ export const useOrderStore = defineStore('order_store', () => {
     }
 
     const getOrders = computed(() => orders.value);
-q
+
     return {
         retrieveOrders,
         getOrders,

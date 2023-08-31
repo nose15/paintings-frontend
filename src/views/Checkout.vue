@@ -1,112 +1,98 @@
 <template>
     <div class="row">
-        <div class="col-5">
+        <div class="col-6">
             <div class="row">
-                <form>
+                <h3>Dane osobowe</h3>
+                <label for="name">Imię i nazwisko</label>
+                <input id="name" v-model="data.credentials.name">
+                <div class="form-text text-danger">{{ errors.credentials.name }}</div>
+
+                <label for="is_company">Kupuję jako</label>
+                <div id="is_company">
+                    <label for="os_prywatna">Os. prywatna</label>
+                    <input id="os_prywatna" type="radio" name="is_company" :checked="!data.isCompany" @click="data.isCompany=false">
+                    <label for="firma">Firma</label>
+                    <input id="firma" type="radio" name="is_company" :checked="data.isCompany" @click="data.isCompany=true">
+                </div>
+                <div class="row" v-if="data.isCompany">
+                    <label for="companyName">Nazwa firmy</label>
+                    <input id="companyName" v-model="data.companyInfo.company_name">
+                    <div class="form-text text-danger">{{ errors.company.name }}</div>
+                    <label for="NIPnumber">Nr NIP</label>
+                    <input id="NIPnumber" v-model="data.companyInfo.NIP_number" v-maska data-maska="##########">
+                    <div class="form-text text-danger">{{ errors.company.nip }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <h3>Informacje kontaktowe</h3>
+                <label for="email">Adres email</label>
+                <input id="email" v-model="data.credentials.email">
+                <div class="form-text text-danger">{{ errors.credentials.email }}</div>
+                <label for="phone">Numer telefonu</label>
+                <input id="phone" v-model="data.credentials.phone" v-maska data-maska="#########">
+                <div class="form-text text-danger">{{ errors.credentials.phone }}</div>
+            </div>
+            <div class="row">
+                <h3>Dostawa</h3>
+                <label for="deliveryMethod">Sposób dostarczenia</label>
+                <div id="deliveryMethod">
+                    <label for="spedition">Wysyłka</label>
+                    <input id="spedition" type="radio" name="delMethod" @click="data.deliveryMethod='spedition'">
+                    <label for="pickup">Odbiór Osobity</label>
+                    <input id="pickup" type="radio" name="delMethod" @click="data.deliveryMethod='pickup'">
+                    <div class="form-text text-danger">{{ errors.delivery }}</div>
+                </div>
+                <div v-if="data.deliveryMethod=='spedition'">
                     <div class="row">
-                        <label for="name">Imię i nazwisko</label>
-                        <input id="name" v-model="data.credentials.name">
-                        <div class="form-text text-danger">{{ errors.credentials.name }}</div>
-                        <label for="email">Adres email</label>
-                        <input id="email" v-model="data.credentials.email">
-                        <div class="form-text text-danger">{{ errors.credentials.email }}</div>
-                        <label for="phone">Numer telefonu</label>
-                        <input id="phone" v-model="data.credentials.phone" v-maska data-maska="#########">
-                        <div class="form-text text-danger">{{ errors.credentials.phone }}</div>
+                        <label for="streetInput">Adres</label>
+                        <input id="streetInput" v-model="data.address.address">
+                        <div class="form-text text-danger">{{ errors.address.address }}</div>
+                        <label for="cityInput">Miasto</label>
+                        <input id="cityInput" v-model="data.address.city">
+                        <div class="form-text text-danger">{{ errors.address.city }}</div>
+                        <label for="zipCodeInput">Kod pocztowy</label>
+                        <input id="zipCodeInput" v-model="data.address.postal_code" v-maska data-maska="##-###">
+                        <div class="form-text text-danger">{{ errors.address.postalCode }}</div>
                     </div>
-                    <label for="is_company">Kupuję jako</label>
-                    <div id="is_company">
-                        <label for="os_prywatna">Os. prywatna</label>
-                        <input id="os_prywatna" type="radio" name="is_company" :checked="!data.isCompany" @click="data.isCompany=false">
-                        <label for="firma">Firma</label>
-                        <input id="firma" type="radio" name="is_company" :checked="data.isCompany" @click="data.isCompany=true">
+                </div>
+                <div v-if="data.deliveryMethod=='pickup'">
+                    <div class="row">
+                        <p>Tutaj będzie pokazany adres i mapka z googla</p>
                     </div>
-                    <div class="row" v-if="data.isCompany">
-                        <label for="companyName">Nazwa firmy</label>
-                        <input id="companyName" v-model="data.companyInfo.company_name">
-                        <div class="form-text text-danger">{{ errors.company.name }}</div>
-                        <label for="NIPnumber">Nr NIP</label>
-                        <input id="NIPnumber" v-model="data.companyInfo.NIP_number" v-maska data-maska="##########">
-                        <div class="form-text text-danger">{{ errors.company.nip }}</div>
-                    </div>
-                    <div>
-                        <label for="deliveryMethod">Sposób dostarczenia</label>
-                        <div id="deliveryMethod">
-                            <label for="spedition">Wysyłka</label>
-                            <input id="spedition" type="radio" name="delMethod" @click="data.deliveryMethod='spedition'">
-                            <label for="pickup">Odbiór Osobity</label>
-                            <input id="pickup" type="radio" name="delMethod" @click="data.deliveryMethod='pickup'">
-                            <div class="form-text text-danger">{{ errors.delivery }}</div>
-                        </div>
-                        <div v-if="data.deliveryMethod=='spedition'">
-                            <div class="row">
-                                <label for="streetInput">Adres</label>
-                                <input id="streetInput" v-model="data.address.address">
-                                <div class="form-text text-danger">{{ errors.address.address }}</div>
-                                <label for="cityInput">Miasto</label>
-                                <input id="cityInput" v-model="data.address.city">
-                                <div class="form-text text-danger">{{ errors.address.city }}</div>
-                                <label for="zipCodeInput">Kod pocztowy</label>
-                                <input id="zipCodeInput" v-model="data.address.postal_code" v-maska data-maska="##-###">
-                                <div class="form-text text-danger">{{ errors.address.postalCode }}</div>
-                            </div>
-                        </div>
-                        <div v-if="data.deliveryMethod=='pickup'">
-                            <div class="row">
-                                <p>Tutaj będzie pokazany adres i mapka z googla</p>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <label for="extra_info">Dodatkowe Informacje</label>
-                            <textarea id="extra_info" v-model="data.extra_info" rows="5" maxlength="255"></textarea>
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </div>
+            <div class="row">
+                <h3>Płatność</h3>
+                <div id="payment_element"></div>
             </div>
         </div>
         <div class="col-4 ms-auto">
             <div class="row">
-                <h4>Zawartosc Koszyka</h4>
+                <h3>Zawartosc Koszyka</h3>
                 <ul>
                     <li v-for="item in items">
-                        <p>{{ item.name }} <span class="fs-5">{{ item.price }} zł</span></p>
+                        <p>{{ item.name }} <span class="fs-5">{{ item.base_price }} zł</span></p>
                     </li>
                 </ul>
-            </div>
-            <div class="row">
-                <h4>Wybierz formę płatności</h4>
-                <form>
-                    <div>
-                        <input id="przelew" type="radio" name="paymentMethod" value="transfer" v-model="data.paymentMethod">
-                        <label for="przelew">Przelew</label>
-                    </div>
-                    <div>
-                        <input id="karta" type="radio" name="paymentMethod" value="card" v-model="data.paymentMethod">
-                        <label for="karta">Karta</label>
-                    </div>
-                    <div>
-                        <input id="paypal" type="radio" name="paymentMethod" value="paypal" v-model="data.paymentMethod">
-                        <label for="paypal">Paypal</label>
-                    </div>
-                </form>
-                <div class="form-text text-danger">{{ errors.payment }}</div>
-                <div></div>
             </div>
             <div class="row">
                 <div>
                     <p class="fs-3">Razem <strong>{{ totalPrice }} zł</strong></p>
                     <div v-if="!loggedIn">
                         <button class="btn btn-success" @click.prevent="loginCheckout()">Zaloguj się</button>
-                        <button class="btn btn-info" @click.prevent="summary()">Kup jako gość</button>
+                        <button class="btn btn-info" @click.prevent="summary()">Zapłać jako gość</button>
                     </div>
                     <div v-else>
-                        <button class="btn btn-warning" @click.prevent="summary()">Podsumowanie</button>
+                        <button class="btn btn-warning" @click.prevent="summary()">Zapłać</button>
                     </div>
 
                 </div>
             </div>
+            <div id="payment-element"></div>
         </div>
+    </div>
+    <div class="row">
+        
     </div>
 </template>
 
@@ -121,6 +107,7 @@ import { vMaska } from "maska"
 import { useRouter } from 'vue-router'
 
 const router = useRouter();
+const stripe = inject('$stripe');
 
 const userStore = useUserDataStore();
 const cartStore = useCartStore();
@@ -130,6 +117,11 @@ const items = cartStore.getCartItems;
 const totalPrice = cartStore.getTotalPrice;
 
 const loggedIn = userStore.isLoggedIn;
+
+// const clientSecret = cartStore.getClientSecret;
+// const elements = stripe.elements({clientSecret: clientSecret});
+// elements.paymentElement = elements.create('payment');
+// elements.paymentElement.mount('#payment-element');
 
 const data = reactive({
     credentials: {

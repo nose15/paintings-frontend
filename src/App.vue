@@ -14,9 +14,14 @@ import { usePaintingsStore } from './stores/paintings';
 import { useUserDataStore } from './stores/userdata';
 import { useOrderStore } from './stores/order_store';
 
+
 const userData = useUserDataStore();
 const paintings = usePaintingsStore();
 const orders = useOrderStore();
 
 const eventBus = inject('$eventBus');
+const stripe = inject('$stripe');
+
 </script>
+
+

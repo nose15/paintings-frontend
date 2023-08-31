@@ -49,6 +49,7 @@ function checkout() {
     const invalid_elements = []
     // check availability of products
     if (invalid_elements.length == 0) {
+        //cartStore.setPaymentIntent();
         router.push('/kasa');
     }
     else {

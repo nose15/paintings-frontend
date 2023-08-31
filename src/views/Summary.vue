@@ -39,20 +39,26 @@
         </div>
         <div>
             <button class="btn btn-warning" @click.prevent="orderRequest">Kupuję i płacę</button>
-            <div v-if="paymentData.orderCreated">W tym momencie wysyłany jest request do API, żeby stworzyć nowy order i oczekuje na url do bramki płatności</div>
         </div>
     </div>
+    <div id="payment-element"></div>
 </template>
 
 <script setup>
-import { reactive, ref, toRaw } from 'vue';
+import { reactive, ref, toRaw, inject, defineComponent } from 'vue';
 import { useCartStore } from '../stores/shopping_cart';
 import { useUserDataStore } from '../stores/userdata';
 import { useCheckoutStore } from '../stores/checkout';
+import { useElements } from '@vue-stripe/vue-stripe'
 
 const cartStore = useCartStore();
 const userStore = useUserDataStore();
 const checkoutStore = useCheckoutStore();
+const stripe = inject("$stripe");
+
+const elements = {
+    paymentElement: null,
+}
 
 const data = {
     credentials: checkoutStore.getCredentials,
@@ -76,8 +82,10 @@ const paymentData = reactive({
 
 async function orderRequest() {
     const order = await checkoutStore.createOrder(toRaw(cartStore.getCartItemIds));
-    console.log(order.clientSecret);
     paymentData.orderCreated = true;
+    const elements = stripe.elements({clientSecret: order.clientSecret});
+    elements.paymentElement = elements.create('payment');
+    elements.paymentElement.mount('#payment-element');
 }
 
 
